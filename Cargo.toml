@@ -2,5 +2,3 @@
 name = "avm"
 version = "0.1.0"
 authors = ["Jan Schulte <hello@unexpected-co.de>"]
-[dependencies]
-getopts = "0.2"
