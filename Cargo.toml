@@ -2,3 +2,5 @@
 name = "avm"
 version = "0.1.0"
 authors = ["Jan Schulte <hello@unexpected-co.de>"]
+[dependencies]
+hyper="0.6.10"

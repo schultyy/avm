@@ -1,4 +1,6 @@
 mod cli;
+mod downloader;
+extern crate hyper;
 use std::process;
 use std::env;
 
@@ -14,4 +16,6 @@ fn main() {
             std::process::exit(1)
         }
     };
+
+    downloader::download_source(version);
 }
