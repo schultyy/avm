@@ -3,11 +3,13 @@ use std::io;
 use std::fs;
 use std::env;
 
-pub fn prepare() -> String {
+pub fn avm_directory() -> String {
     let home_directory = env::home_dir().unwrap();
-    let avm_directory = home_directory.join(".avm");
-    fs::create_dir(avm_directory.clone());
-    avm_directory.to_str()
-        .unwrap()
-        .into()
+    let avm = home_directory.join(".avm");
+    avm.as_path().to_str().unwrap().to_string()
+}
+
+pub fn prepare() -> String {
+    fs::create_dir(avm_directory().clone());
+    avm_directory()
 }

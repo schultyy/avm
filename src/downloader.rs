@@ -31,7 +31,7 @@ fn write_to_file(destination_path: &String, version: &String, response: &mut Res
     }
 }
 
-pub fn download_source(version: String, destination_path: &String) -> Result<String, String> {
+pub fn download_source(version: &String, destination_path: &String) -> Result<String, String> {
     let client = Client::new();
 
     let url = format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version);
