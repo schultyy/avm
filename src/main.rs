@@ -18,14 +18,7 @@ fn main() {
         }
     };
 
-    match setup::prepare() {
-        Ok(path) => {
-            println!("Prepared avm directory at {}", path)
-        },
-        Err(err) => {
-            println!("Could not prepare directory");
-            println!("Reason: {}", err);
-        }
-    };
+    let path = setup::prepare();
+    println!("Prepared avm directory at {}", path);
     // downloader::download_source(version);
 }
