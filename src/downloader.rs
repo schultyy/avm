@@ -1,8 +1,17 @@
-use std::io;
+use std::io::prelude::*;
+use std::fs::File;
+use std::path::Path;
 use hyper::Client;
 use hyper::header::Connection;
 
-pub fn download_source(version: String) -> String {
+fn build_filename(directory: &String, version_str: &String) -> String {
+    let filename = format!("v{}.tar.gz", version_str.clone());
+    Path::new(directory).join(filename).to_str()
+        .unwrap()
+        .into()
+}
+
+pub fn download_source(version: String, destination_path: &String) -> Option<String> {
     let client = Client::new();
 
     let url = format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version);
@@ -11,6 +20,18 @@ pub fn download_source(version: String) -> String {
         .send().unwrap();
 
     println!("Headers:\n{}", res.headers);
-    // io::copy(&mut res, &mut io::stdout()).unwrap();
-    String::new()
+
+    let filename = build_filename(&destination_path, &version);
+    let mut file_handle = match File::create(filename.clone()) {
+        Ok(handle)  => handle,
+        Err(err)    => return None
+    };
+
+    let mut archive = Vec::new();
+    res.read_to_end(&mut archive);
+
+    match file_handle.write_all(&archive[..]) {
+        Ok(_)       => Some(filename),
+        Err(err)    => None
+    }
 }

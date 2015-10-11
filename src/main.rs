@@ -18,7 +18,8 @@ fn main() {
         }
     };
 
-    let path = setup::prepare();
-    println!("Prepared avm directory at {}", path);
-    // downloader::download_source(version);
+    let home_directory = setup::prepare();
+    println!("Prepared avm directory at {}", home_directory);
+
+    downloader::download_source(version, &home_directory);
 }
