@@ -3,6 +3,7 @@ use std::fs::File;
 use std::path::Path;
 use hyper::Client;
 use hyper::header::Connection;
+use hyper::status::StatusCode;
 
 fn build_filename(directory: &String, version_str: &String) -> String {
     let filename = format!("v{}.tar.gz", version_str.clone());
@@ -20,6 +21,11 @@ pub fn download_source(version: String, destination_path: &String) -> Option<Str
         .send().unwrap();
 
     println!("Headers:\n{}", res.headers);
+    println!("Status Code:{}", res.status);
+
+    if res.status == StatusCode::NotFound {
+        return None
+    }
 
     let filename = build_filename(&destination_path, &version);
     let mut file_handle = match File::create(filename.clone()) {
