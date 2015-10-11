@@ -21,5 +21,8 @@ fn main() {
     let home_directory = setup::prepare();
     println!("Prepared avm directory at {}", home_directory);
 
-    downloader::download_source(version, &home_directory);
+    match downloader::download_source(version, &home_directory) {
+        Ok(path)  => println!("Wrote archive to {}", path),
+        Err(err)    => println!("Download failed:\n{}", err)
+    }
 }

@@ -13,23 +13,25 @@ fn build_filename(directory: &String, version_str: &String) -> String {
         .into()
 }
 
-fn write_to_file(destination_path: &String, version: &String, response: &mut Response) -> Option<String> {
+fn write_to_file(destination_path: &String, version: &String, response: &mut Response) -> Result<String, String> {
     let filename = build_filename(&destination_path, &version);
     let mut file_handle = match File::create(filename.clone()) {
         Ok(handle)  => handle,
-        Err(err)    => return None
+        Err(err)    => return Err("Failed to create file".to_string())
     };
-
-    let mut archive = Vec::new();
-    response.read_to_end(&mut archive);
-
+    let mut archive = Vec::<u8>::new();
+    for byte in response.bytes() {
+        archive.push(byte.unwrap());
+    }
     match file_handle.write_all(&archive[..]) {
-        Ok(_)       => Some(filename),
-        Err(err)    => None
+        Ok(_)       => {
+            Ok(filename)
+        },
+        Err(err)    => Err("Failed to write file".to_string())
     }
 }
 
-pub fn download_source(version: String, destination_path: &String) -> Option<String> {
+pub fn download_source(version: String, destination_path: &String) -> Result<String, String> {
     let client = Client::new();
 
     let url = format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version);
@@ -40,7 +42,7 @@ pub fn download_source(version: String, destination_path: &String) -> Option<Str
     if response.status == StatusCode::Ok {
         write_to_file(destination_path, &version, &mut response)
     } else {
-        return None
+        return Err(format!("Download failed with HTTP Status {}", response.status));
     }
 
 }
