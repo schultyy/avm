@@ -1,4 +1,5 @@
 mod cli;
+mod setup;
 mod downloader;
 extern crate hyper;
 use std::process;
@@ -17,5 +18,14 @@ fn main() {
         }
     };
 
-    downloader::download_source(version);
+    match setup::prepare() {
+        Ok(path) => {
+            println!("Prepared avm directory at {}", path)
+        },
+        Err(err) => {
+            println!("Could not prepare directory");
+            println!("Reason: {}", err);
+        }
+    };
+    // downloader::download_source(version);
 }
