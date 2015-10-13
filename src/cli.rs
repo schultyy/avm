@@ -22,6 +22,9 @@ pub fn process_arguments(args: &Vec<String>) -> Command {
     if command == "install" {
         Command{option: CmdOption::Install, args: vec!(args[1].clone()) }
     }
+    else if command == "use" {
+        Command{option: CmdOption::Use, args: vec!(args[1].clone()) }
+    }
     else {
         Command { option: CmdOption::Unknown, args: vec!() }
     }

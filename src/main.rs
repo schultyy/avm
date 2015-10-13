@@ -33,6 +33,14 @@ fn install(version: String) {
     };
 }
 
+fn use_version(version: String) {
+   if setup::has_version(&version) {
+       println!("Has version {}", version);
+   } else {
+       println!("Version {} not installed", version);
+   }
+}
+
 fn main() {
     println!("avm");
     let args: Vec<String> = env::args()
@@ -46,6 +54,10 @@ fn main() {
         cli::CmdOption::Install => {
             version = cmd_args.args.first().unwrap().clone();
             install(version);
+        },
+        cli::CmdOption::Use => {
+            version = cmd_args.args.first().unwrap().clone();
+            use_version(version);
         },
         _ => {
             cli::help();
