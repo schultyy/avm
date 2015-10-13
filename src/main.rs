@@ -11,9 +11,15 @@ fn main() {
     let args: Vec<String> = env::args()
         .skip(1)
         .collect();
-    let version = match cli::process_arguments(&args) {
-        Some(version) => version,
-        None => {
+    let cmd_args = cli::process_arguments(&args);
+    let mut version = String::new();
+
+    match cmd_args.option
+    {
+        cli::CmdOption::Install => {
+            version = cmd_args.args.first().unwrap().clone();
+        },
+        _ => {
             cli::help();
             std::process::exit(1)
         }
