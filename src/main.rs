@@ -1,4 +1,5 @@
 mod cli;
+mod symlink;
 mod setup;
 mod downloader;
 mod archive_reader;
@@ -36,6 +37,7 @@ fn install(version: String) {
 fn use_version(version: String) {
    if setup::has_version(&version) {
        println!("Has version {}", version);
+       symlink::symlink_to_version(&version);
    } else {
        println!("Version {} not installed", version);
    }
