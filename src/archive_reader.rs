@@ -1,13 +1,18 @@
 use std::process::{Command, Output};
 use std::io::prelude::*;
 use std::io::Error;
+use std::fs;
+use std::path::Path;
 
-pub fn decompress(archive_path: String, destination_folder: String) -> Result<Output, Error> {
+pub fn decompress(archive_path: String, destination_folder: String, version_str: &String) -> Result<Output, Error> {
     Command::new("tar")
-        .arg("-zxvf")
+        .arg("-zxf")
         .arg(archive_path)
         .arg("-C")
-        .arg(destination_folder)
+        .arg(version_str)
+        .arg("--strip")
+        .arg("1")
+        .current_dir(Path::new(&destination_folder))
         .output()
 }
 

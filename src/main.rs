@@ -32,7 +32,9 @@ fn main() {
     println!("Wrote archive to {}", path);
     let destination_path = setup::avm_directory();
     println!("Unzipping to {}", destination_path);
-    match archive_reader::decompress(path, destination_path) {
+
+    setup::create_version_directory(&version);
+    match archive_reader::decompress(path, destination_path, &version) {
         Ok(some) => {
             println!("Successfully unpacked archive");
             let stdout = String::from_utf8(some.stderr);
