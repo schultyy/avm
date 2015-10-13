@@ -6,25 +6,7 @@ extern crate hyper;
 use std::process;
 use std::env;
 
-fn main() {
-    println!("avm");
-    let args: Vec<String> = env::args()
-        .skip(1)
-        .collect();
-    let cmd_args = cli::process_arguments(&args);
-    let mut version = String::new();
-
-    match cmd_args.option
-    {
-        cli::CmdOption::Install => {
-            version = cmd_args.args.first().unwrap().clone();
-        },
-        _ => {
-            cli::help();
-            std::process::exit(1)
-        }
-    };
-
+fn install(version: String) {
     let home_directory = setup::prepare();
     println!("Prepared avm directory at {}", home_directory);
 
@@ -49,4 +31,26 @@ fn main() {
         },
         Err(err) => println!("Error occured\n{}", err)
     };
+}
+
+fn main() {
+    println!("avm");
+    let args: Vec<String> = env::args()
+        .skip(1)
+        .collect();
+    let cmd_args = cli::process_arguments(&args);
+    let mut version = String::new();
+
+    match cmd_args.option
+    {
+        cli::CmdOption::Install => {
+            version = cmd_args.args.first().unwrap().clone();
+            install(version);
+        },
+        _ => {
+            cli::help();
+            std::process::exit(1)
+        }
+    };
+
 }
