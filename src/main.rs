@@ -76,6 +76,9 @@ fn main() {
         cli::CmdOption::Ls => {
             list_versions();
         },
+        cli::CmdOption::Help => {
+            cli::help();
+        }
         _ => {
             cli::help();
             std::process::exit(1)

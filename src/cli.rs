@@ -2,12 +2,20 @@ pub enum CmdOption {
     Install,
     Use,
     Ls,
+    Help,
     Unknown
 }
 
 pub fn help() {
-    println!("Usage:");
-    println!("avm install <version>");
+    println!("Usage:\n");
+    println!("Install a new version: ");
+    println!("avm install <version>\n");
+    println!("Use a version: ");
+    println!("avm use <version>\n");
+    println!("List all installed versions:");
+    println!("avm ls\n");
+    println!("Print this help menu:");
+    println!("avm help");
 }
 
 pub struct Command {
@@ -28,6 +36,9 @@ pub fn process_arguments(args: &Vec<String>) -> Command {
     }
     else if command == "ls" {
         Command{option: CmdOption::Ls, args: vec!()}
+    }
+    else if command == "help" {
+        Command{option: CmdOption::Help, args: vec!()}
     }
     else {
         Command { option: CmdOption::Unknown, args: vec!() }
