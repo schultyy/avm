@@ -17,7 +17,7 @@ fn write_to_file(destination_path: &String, version: &String, response: &mut Res
     let filename = build_filename(&destination_path, &version);
     let mut file_handle = match File::create(filename.clone()) {
         Ok(handle)  => handle,
-        Err(err)    => return Err("Failed to create file".to_string())
+        Err(_)    => return Err("Failed to create file".to_string())
     };
     let mut archive = Vec::<u8>::new();
     for byte in response.bytes() {
@@ -27,7 +27,7 @@ fn write_to_file(destination_path: &String, version: &String, response: &mut Res
         Ok(_)       => {
             Ok(filename)
         },
-        Err(err)    => Err("Failed to write file".to_string())
+        Err(_)    => Err("Failed to write file".to_string())
     }
 }
 
