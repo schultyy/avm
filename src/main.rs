@@ -8,8 +8,17 @@ extern crate hyper;
 use std::env;
 
 fn install(version: String) {
-    let home_directory = setup::prepare();
-    println!("Prepared avm directory at {}", home_directory);
+    let home_directory = match setup::prepare() {
+        Ok(directory) => {
+            println!("Prepared avm directory at {}", directory);
+            directory
+        },
+        Err(err) => {
+            println!("Failed to initialize home directory");
+            println!("{:?}", err);
+            std::process::exit(1)
+        }
+    };
 
     let path = match downloader::download_source(&version, &home_directory) {
         Ok(path)  => path,
