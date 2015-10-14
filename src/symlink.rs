@@ -2,6 +2,14 @@ use setup;
 use std::path::{Path, PathBuf};
 use std::os::unix::fs;
 
+pub fn remove_symlink(version_str: &String) {
+    use std::fs;
+    let symlink_path = Path::new(&setup::avm_directory())
+        .join("node")
+        .as_path().to_str().unwrap().to_string();
+    fs::remove_file(symlink_path);
+}
+
 pub fn symlink_to_version(version_str: &String) {
     let node_executable_path= Path::new(&setup::avm_directory())
         .join(version_str)

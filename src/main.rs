@@ -36,15 +36,15 @@ fn install(version: String) {
 
 fn use_version(version: String) {
    if setup::has_version(&version) {
-       println!("Has version {}", version);
+       symlink::remove_symlink(&version);
        symlink::symlink_to_version(&version);
+       println!("Now using node {}", version);
    } else {
        println!("Version {} not installed", version);
    }
 }
 
 fn main() {
-    println!("avm");
     let args: Vec<String> = env::args()
         .skip(1)
         .collect();
