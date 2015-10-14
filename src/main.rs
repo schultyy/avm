@@ -3,6 +3,7 @@ mod symlink;
 mod setup;
 mod downloader;
 mod archive_reader;
+mod ls;
 extern crate hyper;
 use std::process;
 use std::env;
@@ -49,6 +50,12 @@ fn use_version(version: String) {
    }
 }
 
+fn list_versions() {
+    for version in ls::ls_versions() {
+        println!("- {}", version);
+    }
+}
+
 fn main() {
     let args: Vec<String> = env::args()
         .skip(1)
@@ -65,6 +72,9 @@ fn main() {
         cli::CmdOption::Use => {
             version = cmd_args.args.first().unwrap().clone();
             use_version(version);
+        },
+        cli::CmdOption::Ls => {
+            list_versions();
         },
         _ => {
             cli::help();

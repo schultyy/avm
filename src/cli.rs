@@ -1,6 +1,7 @@
 pub enum CmdOption {
     Install,
     Use,
+    Ls,
     Unknown
 }
 
@@ -15,7 +16,7 @@ pub struct Command {
 }
 
 pub fn process_arguments(args: &Vec<String>) -> Command {
-    if args.len() < 2 {
+    if args.len() < 1 {
         return Command { option: CmdOption::Unknown, args: vec!() }
     }
     let command = args[0].clone();
@@ -24,6 +25,9 @@ pub fn process_arguments(args: &Vec<String>) -> Command {
     }
     else if command == "use" {
         Command{option: CmdOption::Use, args: vec!(args[1].clone()) }
+    }
+    else if command == "ls" {
+        Command{option: CmdOption::Ls, args: vec!()}
     }
     else {
         Command { option: CmdOption::Unknown, args: vec!() }
