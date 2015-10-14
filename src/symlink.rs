@@ -1,5 +1,5 @@
 use setup;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::os::unix::fs;
 use std::io::Error;
 

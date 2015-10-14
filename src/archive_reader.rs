@@ -1,7 +1,5 @@
 use std::process::{Command, Output};
-use std::io::prelude::*;
 use std::io::Error;
-use std::fs;
 use std::path::Path;
 
 pub fn decompress(archive_path: String, destination_folder: String, version_str: &String) -> Result<Output, Error> {

@@ -1,6 +1,5 @@
 use setup;
 use std::fs;
-use std::fs::Metadata;
 
 fn is_directory(path: &String) -> bool {
     match fs::metadata(path) {

@@ -5,7 +5,6 @@ mod downloader;
 mod archive_reader;
 mod ls;
 extern crate hyper;
-use std::process;
 use std::env;
 
 fn install(version: String) {
@@ -61,16 +60,15 @@ fn main() {
         .skip(1)
         .collect();
     let cmd_args = cli::process_arguments(&args);
-    let mut version = String::new();
 
     match cmd_args.option
     {
         cli::CmdOption::Install => {
-            version = cmd_args.args.first().unwrap().clone();
+            let version = cmd_args.args.first().unwrap().clone();
             install(version);
         },
         cli::CmdOption::Use => {
-            version = cmd_args.args.first().unwrap().clone();
+            let version = cmd_args.args.first().unwrap().clone();
             use_version(version);
         },
         cli::CmdOption::Ls => {
