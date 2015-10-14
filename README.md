@@ -1,5 +1,4 @@
 # avm
-all version manager -- Right now for node.js only
 
 This installs your node.js versions of choice on your machine. avm uses `~/.avm` for everything, so you can operate without `sudo`.
 
