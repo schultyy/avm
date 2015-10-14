@@ -9,7 +9,17 @@ pub fn avm_directory() -> String {
     avm.as_path().to_str().unwrap().to_string()
 }
 
+fn home_directory_existant() -> bool {
+    match fs::metadata(avm_directory()) {
+        Ok(metadata) => metadata.is_dir(),
+        Err(_) => false
+    }
+}
+
 pub fn prepare() -> Result<String, Error> {
+    if home_directory_existant() {
+        return Ok(avm_directory());
+    }
     match fs::create_dir(avm_directory().clone()) {
         Ok(_) => Ok(avm_directory()),
         Err(err) => Err(err)
