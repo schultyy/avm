@@ -37,8 +37,13 @@ fn install(version: String) {
 fn use_version(version: String) {
    if setup::has_version(&version) {
        symlink::remove_symlink(&version);
-       symlink::symlink_to_version(&version);
-       println!("Now using node {}", version);
+       match symlink::symlink_to_version(&version) {
+           Ok(_) => println!("Now using node {}", version),
+           Err(err) => {
+               println!("{:?}", err);
+               std::process::exit(1)
+           }
+       };
    } else {
        println!("Version {} not installed", version);
    }
