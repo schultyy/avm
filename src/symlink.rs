@@ -3,12 +3,12 @@ use std::path::Path;
 use std::os::unix::fs;
 use std::io::Error;
 
-pub fn remove_symlink(version_str: &String) {
+pub fn remove_symlink() -> Result<(), Error> {
     use std::fs;
     let symlink_path = Path::new(&setup::avm_directory())
         .join("node")
         .as_path().to_str().unwrap().to_string();
-    fs::remove_file(symlink_path);
+    fs::remove_file(symlink_path)
 }
 
 pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
