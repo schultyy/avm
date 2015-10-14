@@ -31,7 +31,13 @@ fn install(version: String) {
     let destination_path = setup::avm_directory();
     println!("Unzipping to {}", destination_path);
 
-    setup::create_version_directory(&version);
+    match setup::create_version_directory(&version) {
+        Ok(_) => { },
+        Err(err) => {
+            println!("Failed to create directory for version\n{}", err);
+            std::process::exit(1)
+        }
+    };
     match archive_reader::decompress(path, destination_path, &version) {
         Ok(some) => {
             println!("Successfully unpacked archive");

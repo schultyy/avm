@@ -26,10 +26,13 @@ pub fn prepare() -> Result<String, Error> {
     }
 }
 
-pub fn create_version_directory(version: &String) {
+pub fn create_version_directory(version: &String) -> Result<String, Error> {
     let path = Path::new(&avm_directory()).join(version)
         .as_path().to_str().unwrap().to_string();
-    fs::create_dir(path);
+    match fs::create_dir(&path) {
+        Ok(_) => Ok(path.clone()),
+        Err(err) => Err(err)
+    }
 }
 
 pub fn has_version(version_str: &String) -> bool {
