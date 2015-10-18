@@ -22,14 +22,14 @@ fn install(version: String) {
         }
     };
 
-    let path = match downloader::download_source(&version, &home_directory) {
+    let archive_path = match downloader::download_source(&version, &home_directory) {
         Ok(path)  => path,
         Err(err)    => {
             println!("Download failed:\n{}", err);
             std::process::exit(1)
         }
     };
-    println!("Wrote archive to {}", path);
+    println!("Wrote archive to {}", archive_path);
     let destination_path = setup::avm_directory();
     println!("Unzipping to {}", destination_path);
 
@@ -40,7 +40,8 @@ fn install(version: String) {
             std::process::exit(1)
         }
     };
-    match archive_reader::decompress(path, destination_path, &version) {
+
+    match archive_reader::decompress(&archive_path, destination_path, &version) {
         Ok(some) => {
             println!("Successfully unpacked archive");
             let stdout = String::from_utf8(some.stderr);
@@ -48,6 +49,11 @@ fn install(version: String) {
             println!("{}", stdout.unwrap());
         },
         Err(err) => println!("Error occured\n{}", err)
+    };
+
+    match archive_reader::remove_archive_file(&archive_path) {
+        Ok(_) => { },
+        Err(err) => println!("Error occured while removing archive file\n{}", err)
     };
 }
 
