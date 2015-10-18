@@ -3,6 +3,7 @@ name = "avm"
 version = "0.1.0"
 dependencies = [
  "hyper 0.6.15 (registry+https://github.com/rust-lang/crates.io-index)",
+ "os_type 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -172,6 +173,11 @@ dependencies = [
  "libressl-pnacl-sys 2.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "pkg-config 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "os_type"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "pkg-config"

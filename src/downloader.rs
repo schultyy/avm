@@ -5,6 +5,7 @@ use hyper::Client;
 use hyper::client::response::Response;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
+use os_type;
 
 fn build_filename(directory: &String, version_str: &String) -> String {
     let filename = format!("v{}.tar.gz", version_str.clone());
@@ -31,11 +32,20 @@ fn write_to_file(destination_path: &String, version: &String, response: &mut Res
     }
 }
 
+fn url_for_os_type(version: &String) -> Option<String> {
+    match os_type::current_platform() {
+        os_type::OSType::OSX => Some(format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version)),
+        _ => None
+    }
+}
+
 pub fn download_source(version: &String, destination_path: &String) -> Result<String, String> {
     let client = Client::new();
-
-    let url = format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version);
-    let mut response = client.get(&*url)
+    let url = url_for_os_type(&version);
+    if url == None {
+        return Err(format!("Unsupported OS Type {:?}", os_type::current_platform()));
+    }
+    let mut response = client.get(&*url.unwrap())
         .header(Connection::close())
         .send().unwrap();
 

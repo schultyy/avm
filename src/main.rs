@@ -6,6 +6,7 @@ mod archive_reader;
 mod ls;
 extern crate hyper;
 extern crate regex;
+extern crate os_type;
 use std::env;
 
 fn install(version: String) {
