@@ -5,6 +5,7 @@ mod downloader;
 mod archive_reader;
 mod ls;
 extern crate hyper;
+extern crate regex;
 use std::env;
 
 fn install(version: String) {
@@ -71,8 +72,17 @@ fn use_version(version: String) {
 }
 
 fn list_versions() {
+    let current_version = match ls::current_version() {
+        Some(v) => v,
+        None => String::new()
+    };
     for version in ls::ls_versions() {
-        println!("- {}", version);
+        if version == current_version {
+            println!("=> {}", version);
+        }
+        else {
+            println!("- {}", version);
+        }
     }
 }
 
