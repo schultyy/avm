@@ -61,8 +61,10 @@ fn use_version(version: String) {
    if setup::has_version(&version) {
        match symlink::remove_symlink() {
            Err(err) => {
-               println!("{:?}", err);
-               std::process::exit(1)
+               if err.kind() != std::io::ErrorKind::NotFound {
+                   println!("{:?}", err);
+                   std::process::exit(1)
+               }
            },
            _ => { }
        };
