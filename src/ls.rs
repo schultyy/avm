@@ -21,7 +21,10 @@ fn directory_name(full_path: &String) -> String {
 
 pub fn current_version() -> Option<String> {
     let home_directory = setup::avm_directory();
-    let path = fs::read_link(Path::new(&home_directory).join("node")).unwrap();
+    let path = match fs::read_link(Path::new(&home_directory).join("node")) {
+        Ok(s) => s,
+        _ => return None
+    };
     let re = Regex::new(r"\d\.\d\.\d").unwrap();
     let path_str = path.as_os_str().to_str()
         .unwrap()
