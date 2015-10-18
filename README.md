@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/schultyy/avm.svg)](https://travis-ci.org/schultyy/avm)
+
 # avm
 
 This installs your node.js versions of choice on your machine. avm uses `~/.avm` for everything, so you can operate without `sudo`.
