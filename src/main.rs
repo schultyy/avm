@@ -22,6 +22,11 @@ fn install(version: String) {
         }
     };
 
+    if setup::has_version(&version) {
+        println!("Version {} is already installed", version);
+        std::process::exit(1)
+    }
+
     let archive_path = match downloader::download_source(&version, &home_directory) {
         Ok(path)  => path,
         Err(err)    => {
