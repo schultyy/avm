@@ -29,7 +29,6 @@ pub fn current_version() -> Option<String> {
     let path_str = path.as_os_str().to_str()
         .unwrap()
         .into();
-    println!("PATH STR {:?}", path_str);
     match re.captures_iter(path_str).next() {
         Some(m) => {
             match m.at(0) {

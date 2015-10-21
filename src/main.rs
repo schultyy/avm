@@ -4,6 +4,7 @@ mod setup;
 mod downloader;
 mod archive_reader;
 mod ls;
+mod logger;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
@@ -12,51 +13,51 @@ use std::env;
 fn install(version: String) {
     let home_directory = match setup::prepare() {
         Ok(directory) => {
-            println!("Prepared avm directory at {}", directory);
+            logger::stdout(format!("Prepared avm directory at {}", directory));
             directory
         },
         Err(err) => {
-            println!("Failed to initialize home directory");
-            println!("{:?}", err);
+            logger::stderr("Failed to initialize home directory");
+            logger::stderr(format!("{:?}", err));
             std::process::exit(1)
         }
     };
 
     if setup::has_version(&version) {
-        println!("Version {} is already installed", version);
+        logger::stderr(format!("Version {} is already installed", version));
         std::process::exit(1)
     }
 
     let archive_path = match downloader::download_source(&version, &home_directory) {
         Ok(path)  => path,
         Err(err)    => {
-            println!("Download failed:\n{}", err);
+            logger::stderr(format!("Download failed:\n{}", err));
             std::process::exit(1)
         }
     };
     let destination_path = setup::avm_directory();
-    println!("Unzipping to {}", destination_path);
+    logger::stdout(format!("Unzipping to {}", destination_path));
 
     match setup::create_version_directory(&version) {
         Ok(_) => { },
         Err(err) => {
-            println!("Failed to create directory for version\n{}", err);
+            logger::stderr(format!("Failed to create directory for version\n{}", err));
             std::process::exit(1)
         }
     };
 
     match archive_reader::decompress(&archive_path, destination_path, &version) {
         Ok(_) => { },
-        Err(err) => println!("Error occured\n{}", err)
+        Err(err) => logger::stderr(format!("Error occured\n{}", err))
     };
 
     match archive_reader::remove_archive_file(&archive_path) {
         Ok(_) => { },
-        Err(err) => println!("Error occured while removing archive file\n{}", err)
+        Err(err) => logger::stderr(format!("Error occured while removing archive file\n{}", err))
     };
 
-    println!("Successfully installed version {}", version);
-    println!("Run avm use {} to use it", version);
+    logger::stdout(format!("Successfully installed version {}", version));
+    logger::stdout(format!("Run avm use {} to use it", version));
 }
 
 fn use_version(version: String) {
@@ -65,8 +66,8 @@ fn use_version(version: String) {
            match symlink::remove_symlink(&executable.to_string()) {
                Err(err) => {
                    if err.kind() != std::io::ErrorKind::NotFound {
-                       println!("Failed to remove symlink {}", executable);
-                       println!("{:?}", err);
+                       logger::stderr(format!("Failed to remove symlink {}", executable));
+                       logger::stderr(format!("{:?}", err));
                        std::process::exit(1)
                    }
                },
@@ -74,16 +75,16 @@ fn use_version(version: String) {
            };
 
            match symlink::symlink_to_version(&version, executable.to_string()) {
-               Ok(_) => println!("Now using {} {}", executable, version),
+               Ok(_) => logger::stdout(format!("Now using {} {}", executable, version)),
                Err(err) => {
-                   println!("Failed to set symlink for {}", executable);
-                   println!("{:?}", err);
+                   logger::stderr(format!("Failed to set symlink for {}", executable));
+                   logger::stderr(format!("{:?}", err));
                    std::process::exit(1)
                }
            };
        }
    } else {
-       println!("Version {} not installed", version);
+       logger::stdout(format!("Version {} not installed", version));
        std::process::exit(1)
    }
 }
@@ -95,10 +96,10 @@ fn list_versions() {
     };
     for version in ls::ls_versions() {
         if version == current_version {
-            println!("=> {}", version);
+            logger::stdout(format!("=> {}", version));
         }
         else {
-            println!("- {}", version);
+            logger::stdout(format!("- {}", version));
         }
     }
 }
