@@ -22,3 +22,9 @@ List all installed versions:
 ```bash
 $ avm ls
 ```
+
+Uninstall a version:
+
+```bash
+$ avm uninstall 4.1.2
+```
