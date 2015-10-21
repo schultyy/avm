@@ -25,7 +25,7 @@ pub fn current_version() -> Option<String> {
         Ok(s) => s,
         _ => return None
     };
-    let re = Regex::new(r"\d\.\d\.\d").unwrap();
+    let re = Regex::new(r"\d+\.\d+\.\d+").unwrap();
     let path_str = path.as_os_str().to_str()
         .unwrap()
         .into();
