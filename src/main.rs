@@ -104,6 +104,22 @@ fn list_versions() {
     }
 }
 
+fn uninstall(version: String) {
+    if setup::has_version(&version) {
+        match setup::remove_version(&version) {
+            Ok(_) => logger::stdout(format!("Successfully removed version {}", version)),
+            Err(err) => {
+                logger::stderr(format!("Failed to remove version {}", version));
+                logger::stderr(format!("{:?}", err));
+            }
+        }
+    }
+    else {
+        logger::stderr(format!("Version {} is not installed", version));
+        std::process::exit(1)
+    }
+}
+
 fn main() {
     let args: Vec<String> = env::args()
         .skip(1)
@@ -122,6 +138,10 @@ fn main() {
         },
         cli::CmdOption::Ls => {
             list_versions();
+        },
+        cli::CmdOption::Uninstall => {
+            let version = cmd_args.args.first().unwrap().clone();
+            uninstall(version);
         },
         cli::CmdOption::Help => {
             cli::help();
