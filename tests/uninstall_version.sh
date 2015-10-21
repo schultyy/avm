@@ -15,8 +15,10 @@ fi
 result=$(readlink ~/.avm/npm)
 if [ $? -eq 1 ]
 then
+  rm -rf ~/.avm/
   echo "Symlink npm removed"
 else
+  rm -rf ~/.avm/
   echo "Symlink npm still exists"
   exit 1
 fi
