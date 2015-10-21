@@ -3,7 +3,7 @@ name = "avm"
 version = "0.1.0"
 dependencies = [
  "hyper 0.6.15 (registry+https://github.com/rust-lang/crates.io-index)",
- "os_type 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "os_type 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -176,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "os_type"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "regex 0.1.41 (registry+https://github.com/rust-lang/crates.io-index)",

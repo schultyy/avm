@@ -33,9 +33,16 @@ fn write_to_file(destination_path: &String, version: &String, response: &mut Res
 }
 
 fn url_for_os_type(version: &String) -> Option<String> {
-    match os_type::current_platform() {
-        os_type::OSType::OSX => Some(format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version)),
-        _ => None
+    let platform = os_type::current_platform();
+
+    if platform == os_type::OSType::OSX {
+        Some(format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version))
+    }
+    else if platform == os_type::OSType::Ubuntu || platform == os_type::OSType::Redhat {
+        Some(format!("https://nodejs.org/dist/v{version}/node-v{version}-linux-x64.tar.gz", version=version))
+    }
+    else {
+        None
     }
 }
 
