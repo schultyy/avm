@@ -42,6 +42,9 @@ pub fn current_version() -> Option<String> {
 }
 
 pub fn ls_versions() -> Vec<String> {
+    if !setup::home_directory_existant() {
+        return vec!();
+    }
     let home = setup::avm_directory();
     let mut paths = Vec::new();
     for path in fs::read_dir(home).unwrap() {
