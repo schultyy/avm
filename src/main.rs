@@ -61,22 +61,27 @@ fn install(version: String) {
 
 fn use_version(version: String) {
    if setup::has_version(&version) {
-       match symlink::remove_symlink() {
-           Err(err) => {
-               if err.kind() != std::io::ErrorKind::NotFound {
+       for executable in vec!["node", "npm"] {
+           match symlink::remove_symlink(&executable.to_string()) {
+               Err(err) => {
+                   if err.kind() != std::io::ErrorKind::NotFound {
+                       println!("Failed to remove symlink {}", executable);
+                       println!("{:?}", err);
+                       std::process::exit(1)
+                   }
+               },
+               _ => { }
+           };
+
+           match symlink::symlink_to_version(&version, executable.to_string()) {
+               Ok(_) => println!("Now using {} {}", executable, version),
+               Err(err) => {
+                   println!("Failed to set symlink for {}", executable);
                    println!("{:?}", err);
                    std::process::exit(1)
                }
-           },
-           _ => { }
-       };
-       match symlink::symlink_to_version(&version) {
-           Ok(_) => println!("Now using node {}", version),
-           Err(err) => {
-               println!("{:?}", err);
-               std::process::exit(1)
-           }
-       };
+           };
+       }
    } else {
        println!("Version {} not installed", version);
        std::process::exit(1)
