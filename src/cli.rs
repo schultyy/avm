@@ -1,3 +1,5 @@
+use logger;
+
 pub enum CmdOption {
     Install,
     Use,
@@ -7,15 +9,15 @@ pub enum CmdOption {
 }
 
 pub fn help() {
-    println!("Usage:\n");
-    println!("Install a new version: ");
-    println!("avm install <version>\n");
-    println!("Use a version: ");
-    println!("avm use <version>\n");
-    println!("List all installed versions:");
-    println!("avm ls\n");
-    println!("Print this help menu:");
-    println!("avm help");
+    logger::stdout(format!("Usage:\n"));
+    logger::stdout(format!("Install a new version: "));
+    logger::stdout(format!("avm install <version>\n"));
+    logger::stdout(format!("Use a version: "));
+    logger::stdout(format!("avm use <version>\n"));
+    logger::stdout(format!("List all installed versions:"));
+    logger::stdout(format!("avm ls\n"));
+    logger::stdout(format!("Print this help menu:"));
+    logger::stdout(format!("avm help"));
 }
 
 pub struct Command {
