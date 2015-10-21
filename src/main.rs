@@ -74,6 +74,7 @@ fn use_version(version: String) {
        };
    } else {
        println!("Version {} not installed", version);
+       std::process::exit(1)
    }
 }
 
