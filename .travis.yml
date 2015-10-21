@@ -3,6 +3,9 @@ rust:
   - stable
   - beta
   - nightly
+script:
+  - cargo build --verbose
+  - ./tests/*.sh
 matrix:
   allow_failures:
     - rust: nightly
