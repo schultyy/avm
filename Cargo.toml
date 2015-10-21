@@ -6,3 +6,4 @@ authors = ["Jan Schulte <hello@unexpected-co.de>"]
 hyper="0.6.10"
 regex="0.1.41"
 os_type="0.2.1"
+term = "0.2"
