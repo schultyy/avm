@@ -2,6 +2,16 @@ use setup;
 use std::path::Path;
 use std::os::unix::fs;
 use std::io::Error;
+use ls;
+
+pub fn points_to_version(version: &String) -> bool {
+    let current_version = match ls::current_version() {
+        Some(v) => v,
+        None => return false
+    };
+
+    &current_version == version
+}
 
 pub fn remove_symlink(executable: &String) -> Result<(), Error> {
     use std::fs;

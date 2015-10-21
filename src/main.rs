@@ -61,32 +61,32 @@ fn install(version: String) {
 }
 
 fn use_version(version: String) {
-   if setup::has_version(&version) {
-       for executable in vec!["node", "npm"] {
-           match symlink::remove_symlink(&executable.to_string()) {
-               Err(err) => {
-                   if err.kind() != std::io::ErrorKind::NotFound {
-                       logger::stderr(format!("Failed to remove symlink {}", executable));
-                       logger::stderr(format!("{:?}", err));
-                       std::process::exit(1)
-                   }
-               },
-               _ => { }
-           };
+    if setup::has_version(&version) {
+        for executable in vec!["node", "npm"] {
+            match symlink::remove_symlink(&executable.to_string()) {
+                Err(err) => {
+                    if err.kind() != std::io::ErrorKind::NotFound {
+                        logger::stderr(format!("Failed to remove symlink {}", executable));
+                        logger::stderr(format!("{:?}", err));
+                        std::process::exit(1)
+                    }
+                },
+                _ => { }
+            };
 
-           match symlink::symlink_to_version(&version, executable.to_string()) {
-               Ok(_) => logger::stdout(format!("Now using {} {}", executable, version)),
-               Err(err) => {
-                   logger::stderr(format!("Failed to set symlink for {}", executable));
-                   logger::stderr(format!("{:?}", err));
-                   std::process::exit(1)
-               }
-           };
-       }
-   } else {
-       logger::stdout(format!("Version {} not installed", version));
-       std::process::exit(1)
-   }
+            match symlink::symlink_to_version(&version, executable.to_string()) {
+                Ok(_) => logger::stdout(format!("Now using {} {}", executable, version)),
+                Err(err) => {
+                    logger::stderr(format!("Failed to set symlink for {}", executable));
+                    logger::stderr(format!("{:?}", err));
+                    std::process::exit(1)
+                }
+            };
+        }
+    } else {
+        logger::stdout(format!("Version {} not installed", version));
+        std::process::exit(1)
+    }
 }
 
 fn list_versions() {
@@ -101,6 +101,38 @@ fn list_versions() {
         else {
             logger::stdout(format!("- {}", version));
         }
+    }
+}
+
+fn uninstall(version: String) {
+    if setup::has_version(&version) {
+
+        if symlink::points_to_version(&version) {
+            for executable in vec!["node", "npm"] {
+                match symlink::remove_symlink(&executable.to_string()) {
+                    Err(err) => {
+                        if err.kind() != std::io::ErrorKind::NotFound {
+                            logger::stderr(format!("Failed to remove symlink {}", executable));
+                            logger::stderr(format!("{:?}", err));
+                            std::process::exit(1)
+                        }
+                    },
+                    _ => { }
+                }
+            }
+        }
+
+        match setup::remove_version(&version) {
+            Ok(_) => logger::stdout(format!("Successfully removed version {}", version)),
+            Err(err) => {
+                logger::stderr(format!("Failed to remove version {}", version));
+                logger::stderr(format!("{:?}", err));
+            }
+        }
+    }
+    else {
+        logger::stderr(format!("Version {} is not installed", version));
+        std::process::exit(1)
     }
 }
 
@@ -122,6 +154,10 @@ fn main() {
         },
         cli::CmdOption::Ls => {
             list_versions();
+        },
+        cli::CmdOption::Uninstall => {
+            let version = cmd_args.args.first().unwrap().clone();
+            uninstall(version);
         },
         cli::CmdOption::Help => {
             cli::help();
