@@ -164,7 +164,6 @@ fn main() {
         }
         _ => {
             cli::help();
-            std::process::exit(1)
         }
     };
 
