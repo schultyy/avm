@@ -19,6 +19,11 @@ fn directory_name(full_path: &String) -> String {
         .into()
 }
 
+fn is_version_directory(path: &String) -> bool {
+    let re = Regex::new(r"\d+\.\d+\.\d+").unwrap();
+    re.is_match(path)
+}
+
 pub fn current_version() -> Option<String> {
     let home_directory = setup::avm_directory();
     let path = match fs::read_link(Path::new(&home_directory).join("node")) {
@@ -48,7 +53,7 @@ pub fn ls_versions() -> Vec<String> {
     let mut paths = Vec::new();
     for path in fs::read_dir(home).unwrap() {
         let path_str = path.unwrap().path().display().to_string();
-        if is_directory(&path_str) {
+        if is_directory(&path_str) && is_version_directory(&path_str) {
             paths.push(directory_name(&path_str));
         }
     }
