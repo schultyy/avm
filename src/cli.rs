@@ -6,6 +6,7 @@ pub enum CmdOption {
     Ls,
     Help,
     Uninstall,
+    Version,
     Unknown
 }
 
@@ -19,6 +20,8 @@ pub fn help() {
     logger::stdout(format!("avm ls\n"));
     logger::stdout(format!("Uninstall a version:"));
     logger::stdout(format!("avm uninstall <version>\n"));
+    logger::stdout(format!("Print version number:"));
+    logger::stdout(format!("avm -v\n"));
     logger::stdout(format!("Print this help menu:"));
     logger::stdout(format!("avm help"));
 }
@@ -47,6 +50,9 @@ pub fn process_arguments(args: &Vec<String>) -> Command {
     }
     else if command == "uninstall" {
         Command{option: CmdOption::Uninstall, args: vec!(args[1].clone()) }
+    }
+    else if command == "-v" {
+        Command{option: CmdOption::Version, args: vec!() }
     }
     else {
         Command { option: CmdOption::Unknown, args: vec!() }

@@ -136,6 +136,11 @@ fn uninstall(version: String) {
     }
 }
 
+fn print_version() {
+    const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+    println!("v{}", VERSION);
+}
+
 fn main() {
     let args: Vec<String> = env::args()
         .skip(1)
@@ -158,6 +163,9 @@ fn main() {
         cli::CmdOption::Uninstall => {
             let version = cmd_args.args.first().unwrap().clone();
             uninstall(version);
+        },
+        cli::CmdOption::Version => {
+            print_version();
         },
         cli::CmdOption::Help => {
             cli::help();
