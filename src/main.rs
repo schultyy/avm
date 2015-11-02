@@ -94,6 +94,8 @@ fn list_versions() {
         Some(v) => v,
         None => String::new()
     };
+    logger::stdout(format!("Listing all installed versions:"));
+    logger::stdout(format!("(=>): current version"));
     for version in ls::ls_versions() {
         if version == current_version {
             logger::stdout(format!("=> {}", version));
