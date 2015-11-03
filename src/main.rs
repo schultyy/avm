@@ -62,27 +62,25 @@ fn install(version: String) {
 
 fn use_version(version: String) {
     if setup::has_version(&version) {
-        for executable in vec!["node", "npm"] {
-            match symlink::remove_symlink(&executable.to_string()) {
-                Err(err) => {
-                    if err.kind() != std::io::ErrorKind::NotFound {
-                        logger::stderr(format!("Failed to remove symlink {}", executable));
-                        logger::stderr(format!("{:?}", err));
-                        std::process::exit(1)
-                    }
-                },
-                _ => { }
-            };
-
-            match symlink::symlink_to_version(&version, executable.to_string()) {
-                Ok(_) => logger::stdout(format!("Now using {} {}", executable, version)),
-                Err(err) => {
-                    logger::stderr(format!("Failed to set symlink for {}", executable));
+        match symlink::remove_symlink() {
+            Err(err) => {
+                if err.kind() != std::io::ErrorKind::NotFound {
+                    logger::stderr("Failed to remove symlink");
                     logger::stderr(format!("{:?}", err));
                     std::process::exit(1)
                 }
-            };
-        }
+            },
+            _ => { }
+        };
+
+        match symlink::symlink_to_version(&version) {
+            Ok(_) => logger::stdout(format!("Now using node v{}", version)),
+            Err(err) => {
+                logger::stderr("Failed to set symlink");
+                logger::stderr(format!("{:?}", err));
+                std::process::exit(1)
+            }
+        };
     } else {
         logger::stdout(format!("Version {} not installed", version));
         std::process::exit(1)
@@ -110,17 +108,15 @@ fn uninstall(version: String) {
     if setup::has_version(&version) {
 
         if symlink::points_to_version(&version) {
-            for executable in vec!["node", "npm"] {
-                match symlink::remove_symlink(&executable.to_string()) {
-                    Err(err) => {
-                        if err.kind() != std::io::ErrorKind::NotFound {
-                            logger::stderr(format!("Failed to remove symlink {}", executable));
-                            logger::stderr(format!("{:?}", err));
-                            std::process::exit(1)
-                        }
-                    },
-                    _ => { }
-                }
+            match symlink::remove_symlink() {
+                Err(err) => {
+                    if err.kind() != std::io::ErrorKind::NotFound {
+                        logger::stderr("Failed to remove symlink");
+                        logger::stderr(format!("{:?}", err));
+                        std::process::exit(1)
+                    }
+                },
+                _ => { }
             }
         }
 

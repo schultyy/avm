@@ -26,7 +26,7 @@ fn is_version_directory(path: &String) -> bool {
 
 pub fn current_version() -> Option<String> {
     let home_directory = setup::avm_directory();
-    let path = match fs::read_link(Path::new(&home_directory).join("node")) {
+    let path = match fs::read_link(Path::new(&home_directory).join("bin")) {
         Ok(s) => s,
         _ => return None
     };

@@ -13,23 +13,19 @@ pub fn points_to_version(version: &String) -> bool {
     &current_version == version
 }
 
-pub fn remove_symlink(executable: &String) -> Result<(), Error> {
+pub fn remove_symlink() -> Result<(), Error> {
     use std::fs;
     let symlink_path = Path::new(&setup::avm_directory())
-        .join(executable)
+        .join("bin")
         .as_path().to_str().unwrap().to_string();
     fs::remove_file(symlink_path)
 }
 
-pub fn symlink_to_version(version_str: &String, executable: String) -> Result<(), Error> {
-    let executable_path= Path::new(&setup::avm_directory())
-        .join(version_str)
-        .join("bin")
-        .join(&executable)
-        .as_path().to_str().unwrap().to_string();
-
-    let dest_executable_path = Path::new(&setup::avm_directory())
-        .join(executable)
-        .as_path().to_str().unwrap().to_string();
-    fs::symlink(executable_path, dest_executable_path)
+pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
+    let avm_directory = setup::avm_directory();
+    let destination_bin_path = Path::new(&avm_directory)
+                                        .join(version_str)
+                                        .join("bin");
+    let bin_directory = Path::new(&avm_directory).join("bin");
+    fs::symlink(destination_bin_path, bin_directory)
 }

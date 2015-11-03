@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-result=$(readlink ~/.avm/npm)
+result=$(readlink ~/.avm/bin)
 if [ $? -ne 0 ]
 then
   echo "Link to version 4.1.2 does not exist"

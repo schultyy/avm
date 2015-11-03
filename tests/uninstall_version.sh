@@ -3,22 +3,14 @@
 cargo run install 0.12.0
 cargo run use 0.12.0
 cargo run uninstall 0.12.0
-result=$(readlink ~/.avm/node)
+result=$(readlink ~/.avm/bin)
 if [ $? -eq 1 ]
 then
-  echo "Symlink node removed"
+  echo "Symlink to bin directory removed"
 else
-  echo "Symlink node still exists"
+  echo "Symlink to bin directory still exists"
+  rm -rf ~/.avm/
   exit 1
 fi
 
-result=$(readlink ~/.avm/npm)
-if [ $? -eq 1 ]
-then
-  rm -rf ~/.avm/
-  echo "Symlink npm removed"
-else
-  rm -rf ~/.avm/
-  echo "Symlink npm still exists"
-  exit 1
-fi
+rm -rf ~/.avm/
