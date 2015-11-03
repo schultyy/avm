@@ -21,7 +21,6 @@ function has_git {
 
 function create_folder {
   mkdir -p ~/.avm/
-  mkdir -p ~/.avm/bin
 }
 
 function download_source {
@@ -33,7 +32,7 @@ function cleanup {
   rm -rf /tmp/avm
 }
 
-function compile {
+function compile_avm {
   cd /tmp/avm/
   cargo build --release
   if [ $? -ne 0 ]
@@ -43,7 +42,7 @@ function compile {
     >&2 echo "fatal: exiting"
     exit 1
   fi
-  cp target/release/avm ~/.avm/bin/avm
+  cp target/release/avm ~/.avm/
 }
 
 echo "Installing avm"
@@ -51,8 +50,8 @@ has_rust
 has_git
 create_folder
 download_source
-compile
+compile_avm
 cleanup
 
 echo "Installation finished"
-echo "Add this export 'PATH=~/.avm/bin:~/.avm/:\$PATH' to your bash configuration file"
+echo "Add this 'export PATH=~/.avm/:~/.avm/bin:\$PATH' to your bash configuration file"
