@@ -3,7 +3,7 @@
 cargo run install 4.1.2
 
 if [ $? -ne 0 ]; then
-  echo "Didn't exit with status code 0"
+  echo "Compilation was not successful"
   rm -rf ~/.avm/
   exit 1
 fi
