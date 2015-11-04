@@ -19,7 +19,7 @@ the version for your operating system.
 After installation finished, you need to make sure that `avm` is in your `PATH`. For that you need to append the following line to either `~/.zshrc` or `~/.bash_profile`:
 
 ```bash
-export PATH=~/.avm/:~/.avm/bin:\$PATH
+export PATH=~/.avm/:~/.avm/bin:$PATH
 ```
 
 If you encounter the following compilation error on a Linux based system:
