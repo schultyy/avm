@@ -48,6 +48,8 @@ Install a new node version:
 $ avm install 4.1.2
 ```
 
+Please note, that right now avm installs precompiled versions of Node.js. There is no supported yet for installing from source.
+
 Use `4.1.2` by default:
 ```bash
 $ avm use 4.1.2
