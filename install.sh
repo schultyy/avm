@@ -61,4 +61,4 @@ compile_avm
 cleanup
 
 echo "Installation finished"
-echo "Add this 'export PATH=~/.avm/:~/.avm/bin:\$PATH' to your bash configuration file"
+echo "Add this 'export PATH=\$PATH:~/.avm/:~/.avm/bin' to your bash configuration file"
