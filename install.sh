@@ -42,7 +42,14 @@ function compile_avm {
     >&2 echo "fatal: exiting"
     exit 1
   fi
-  cp target/release/avm ~/.avm/
+  sudo cp target/release/avm /usr/local/bin/avm
+  if [ $? -ne 0 ]
+  then
+    >&2 echo "fatal: Could copy binary to /usr/local/bin"
+    cleanup
+    >&2 echo "fatal: exiting"
+    exit 1
+  fi
 }
 
 echo "Installing avm"
