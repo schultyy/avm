@@ -13,7 +13,6 @@ use std::env;
 fn install(version: String) {
     let home_directory = match setup::prepare() {
         Ok(directory) => {
-            logger::stdout(format!("Prepared avm directory at {}", directory));
             directory
         },
         Err(err) => {
@@ -56,8 +55,8 @@ fn install(version: String) {
         Err(err) => logger::stderr(format!("Error occured while removing archive file\n{}", err))
     };
 
-    logger::stdout(format!("Successfully installed version {}", version));
-    logger::stdout(format!("Run avm use {} to use it", version));
+    logger::success(format!("Successfully installed version {}", version));
+    logger::success(format!("Run avm use {} to use it", version));
 }
 
 fn use_version(version: String) {
@@ -74,7 +73,7 @@ fn use_version(version: String) {
         };
 
         match symlink::symlink_to_version(&version) {
-            Ok(_) => logger::stdout(format!("Now using node v{}", version)),
+            Ok(_) => logger::success(format!("Now using node v{}", version)),
             Err(err) => {
                 logger::stderr("Failed to set symlink");
                 logger::stderr(format!("{:?}", err));
@@ -82,7 +81,7 @@ fn use_version(version: String) {
             }
         };
     } else {
-        logger::stdout(format!("Version {} not installed", version));
+        logger::stderr(format!("Version {} not installed", version));
         std::process::exit(1)
     }
 }
