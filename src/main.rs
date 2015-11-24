@@ -13,7 +13,6 @@ use std::env;
 fn install(version: String) {
     let home_directory = match setup::prepare() {
         Ok(directory) => {
-            logger::stdout(format!("Prepared avm directory at {}", directory));
             directory
         },
         Err(err) => {
