@@ -56,8 +56,8 @@ fn install(version: String) {
         Err(err) => logger::stderr(format!("Error occured while removing archive file\n{}", err))
     };
 
-    logger::stdout(format!("Successfully installed version {}", version));
-    logger::stdout(format!("Run avm use {} to use it", version));
+    logger::success(format!("Successfully installed version {}", version));
+    logger::success(format!("Run avm use {} to use it", version));
 }
 
 fn use_version(version: String) {
