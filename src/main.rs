@@ -73,7 +73,7 @@ fn use_version(version: String) {
         };
 
         match symlink::symlink_to_version(&version) {
-            Ok(_) => logger::stdout(format!("Now using node v{}", version)),
+            Ok(_) => logger::success(format!("Now using node v{}", version)),
             Err(err) => {
                 logger::stderr("Failed to set symlink");
                 logger::stderr(format!("{:?}", err));
@@ -81,7 +81,7 @@ fn use_version(version: String) {
             }
         };
     } else {
-        logger::stdout(format!("Version {} not installed", version));
+        logger::stderr(format!("Version {} not installed", version));
         std::process::exit(1)
     }
 }
