@@ -27,11 +27,10 @@ fn call_system_node(paths_without_avm: Vec<String>) -> Result<String, Error> {
         .arg("-v")
         .env("PATH", env::join_paths(paths_without_avm).unwrap())
         .output();
-    let output_result = match output {
-        Ok(r) => r,
+    match output {
+        Ok(r) => Ok(String::from_utf8_lossy(&r.stdout).to_string()),
         Err(err) => return Err(err)
-    };
-    Ok(String::from_utf8_lossy(&output_result.stdout).to_string())
+    }
 }
 
 pub fn version() -> Result<String, Error> {
