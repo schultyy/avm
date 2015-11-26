@@ -4,6 +4,7 @@ mod setup;
 mod downloader;
 mod archive_reader;
 mod ls;
+mod system_node;
 mod logger;
 extern crate hyper;
 extern crate regex;
@@ -90,6 +91,13 @@ fn list_versions() {
     let current_version = match ls::current_version() {
         Some(v) => v,
         None => String::new()
+    };
+
+    match system_node::version() {
+        Ok(version) => {
+            logger::stdout(format!("System: {}", version));
+        },
+        Err(err) => logger::stderr(format!("{}", err))
     };
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
