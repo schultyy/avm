@@ -22,23 +22,20 @@ fn remove_avm_paths(all_paths: Vec<String>) -> Vec<String> {
         .collect::<Vec<_>>()
 }
 
-fn set_new_path_variable(paths: Vec<String>) {
-    let new_path = env::join_paths(paths).unwrap();
-    env::set_var("PATH", &new_path);
-}
-
-fn call_system_node() -> Result<String, Error> {
-    let output = match Command::new("node").arg("-v").output() {
+fn call_system_node(paths_without_avm: Vec<String>) -> Result<String, Error> {
+    let output = Command::new("node")
+        .arg("-v")
+        .env("PATH", env::join_paths(paths_without_avm).unwrap())
+        .output();
+    let output_result = match output {
         Ok(r) => r,
         Err(err) => return Err(err)
     };
-    let foo = String::from_utf8_lossy(&output.stdout);
-    Ok(foo.to_string())
+    Ok(String::from_utf8_lossy(&output_result.stdout).to_string())
 }
 
 pub fn version() -> Result<String, Error> {
     let path_env = read_env().unwrap();
     let paths_without_avm = remove_avm_paths(split_path(&path_env));
-    set_new_path_variable(paths_without_avm);
-    call_system_node()
+    call_system_node(paths_without_avm)
 }
