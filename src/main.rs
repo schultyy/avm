@@ -81,7 +81,14 @@ fn use_version(version: String) {
                 std::process::exit(1)
             }
         };
-    } else {
+    }
+    else if version == "system" {
+        match symlink::symlink_to_system_node() {
+            Ok(_)       => logger::stdout("using system node"),
+            Err(err)    => logger::stderr(format!("{:?}", err))
+        }
+    }
+    else {
         logger::stderr(format!("Version {} not installed", version));
         std::process::exit(1)
     }
