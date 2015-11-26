@@ -93,12 +93,6 @@ fn list_versions() {
         None => String::new()
     };
 
-    match system_node::version() {
-        Ok(version) => {
-            logger::stdout(format!("System: {}", version));
-        },
-        Err(err) => logger::stderr(format!("{}", err))
-    };
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
     for version in ls::ls_versions() {
@@ -109,6 +103,14 @@ fn list_versions() {
             logger::stdout(format!("- {}", version));
         }
     }
+    match system_node::version() {
+        Ok(version) => {
+            logger::stdout(format!("System: {}", version));
+        },
+        Err(_) => {
+            logger::stdout(format!("System: -"))
+        }
+    };
 }
 
 fn uninstall(version: String) {
