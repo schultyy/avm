@@ -10,6 +10,7 @@ extern crate hyper;
 extern crate regex;
 extern crate os_type;
 use std::env;
+use std::io::ErrorKind;
 
 fn install(version: String) {
     let home_directory = match setup::prepare() {
@@ -89,7 +90,13 @@ fn use_version(version: String) {
         remove_symlink();
         match symlink::symlink_to_system_node() {
             Ok(_)       => logger::stdout("using system node"),
-            Err(err)    => logger::stderr(format!("{:?}", err))
+            Err(err)    => {
+                if err.kind() == ErrorKind::NotFound {
+                    logger::stderr(format!("It appears that there's no node.js preinstalled on this system"));
+                } else {
+                    logger::stderr(format!("{:?}", err));
+                }
+            }
         }
     }
     else {
