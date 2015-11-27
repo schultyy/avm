@@ -31,7 +31,7 @@ pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
     fs::symlink(destination_bin_path, bin_directory)
 }
 
-fn create_dir() {
+fn create_bin_dir() {
     use std::fs;
     let avm_directory = setup::avm_directory();
     setup::prepare();
@@ -42,7 +42,7 @@ fn create_dir() {
 pub fn symlink_to_system_node() -> Result<(), Error> {
     let avm_directory = setup::avm_directory();
     let bin_directory = Path::new(&avm_directory).join("bin");
-    create_dir();
+    create_bin_dir();
 
     let local_node  = bin_directory.join("node");
     let system_node_path = system_node::system_node_path().unwrap_or_else(|err| String::new());
