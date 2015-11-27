@@ -60,19 +60,22 @@ fn install(version: String) {
     logger::success(format!("Run avm use {} to use it", version));
 }
 
+fn remove_symlink() {
+    match symlink::remove_symlink() {
+        Err(err) => {
+            if err.kind() != std::io::ErrorKind::NotFound {
+                logger::stderr("Failed to remove symlink");
+                logger::stderr(format!("{:?}", err));
+                std::process::exit(1)
+            }
+        },
+        _ => { }
+    };
+}
+
 fn use_version(version: String) {
     if setup::has_version(&version) {
-        match symlink::remove_symlink() {
-            Err(err) => {
-                if err.kind() != std::io::ErrorKind::NotFound {
-                    logger::stderr("Failed to remove symlink");
-                    logger::stderr(format!("{:?}", err));
-                    std::process::exit(1)
-                }
-            },
-            _ => { }
-        };
-
+        remove_symlink();
         match symlink::symlink_to_version(&version) {
             Ok(_) => logger::success(format!("Now using node v{}", version)),
             Err(err) => {
@@ -83,6 +86,7 @@ fn use_version(version: String) {
         };
     }
     else if version == "system" {
+        remove_symlink();
         match symlink::symlink_to_system_node() {
             Ok(_)       => logger::stdout("using system node"),
             Err(err)    => logger::stderr(format!("{:?}", err))

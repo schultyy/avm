@@ -24,10 +24,13 @@ pub fn points_to_version(version: &String) -> bool {
 
 pub fn remove_symlink() -> Result<(), Error> {
     use std::fs;
-    let symlink_path = Path::new(&setup::avm_directory())
-        .join("bin")
-        .as_path().to_str().unwrap().to_string();
-    fs::remove_file(symlink_path)
+    let symlink_path = Path::new(&setup::avm_directory()).join("bin");
+    let remove_file_result = fs::remove_file(&symlink_path);
+    if remove_file_result.is_err() {
+        fs::remove_dir_all(&symlink_path)
+    } else {
+        remove_file_result
+    }
 }
 
 pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
