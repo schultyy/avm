@@ -5,6 +5,14 @@ use std::io::Error;
 use ls;
 use system_node;
 
+fn create_bin_dir() {
+    use std::fs;
+    let avm_directory = setup::avm_directory();
+    setup::prepare();
+    let bin_directory = Path::new(&avm_directory).join("bin");
+    fs::create_dir(bin_directory);
+}
+
 pub fn points_to_version(version: &String) -> bool {
     let current_version = match ls::current_version() {
         Some(v) => v,
@@ -29,14 +37,6 @@ pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
                                         .join("bin");
     let bin_directory = Path::new(&avm_directory).join("bin");
     fs::symlink(destination_bin_path, bin_directory)
-}
-
-fn create_bin_dir() {
-    use std::fs;
-    let avm_directory = setup::avm_directory();
-    setup::prepare();
-    let bin_directory = Path::new(&avm_directory).join("bin");
-    fs::create_dir(bin_directory);
 }
 
 pub fn symlink_to_system_node() -> Result<(), Error> {
