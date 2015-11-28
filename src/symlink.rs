@@ -1,7 +1,7 @@
 use setup;
 use std::path::Path;
 use std::os::unix::fs;
-use std::io::Error;
+use std::io::{Error, ErrorKind};
 use ls;
 use system_node;
 
@@ -50,7 +50,11 @@ pub fn symlink_to_system_binary(binary_name: String) -> Result<(), Error> {
     let bin_directory = Path::new(&avm_directory).join("bin");
     match create_bin_dir() {
         Ok(_) => { },
-        Err(err) => return Err(err)
+        Err(err) => {
+            if err.kind() != ErrorKind::AlreadyExists {
+                return Err(err)
+            }
+        }
     }
 
     let local_binary = bin_directory.join(&binary_name);
