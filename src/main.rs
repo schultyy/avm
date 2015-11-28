@@ -94,10 +94,16 @@ fn use_version(version: String) {
             Err(err)    => {
                 if err.kind() == ErrorKind::NotFound {
                     logger::stderr(format!("It appears that there's no node.js preinstalled on this system"));
+                    return;
                 } else {
                     logger::stderr(format!("{:?}", err));
                 }
             }
+        }
+
+        match symlink::symlink_to_system_binary("npm".to_string()) {
+            Ok(_)       => { },
+            Err(err)    => logger::stderr(format!("{:?}", err))
         }
     }
     else {
