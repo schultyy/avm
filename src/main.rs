@@ -117,17 +117,23 @@ fn list_versions() {
         Err(_) => Default::default()
     };
     let mut installed_versions = ls::ls_versions();
-    installed_versions.push(system_version);
+    installed_versions.push(system_version.clone());
 
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
 
     for installed_version in installed_versions {
+        let system_suffix = if installed_version == system_version {
+            String::from("(system)")
+        } else {
+            String::new()
+        };
+
         if installed_version.path == current_version.path {
-            logger::stdout(format!("=> {}", installed_version.name));
+            logger::stdout(format!("=> {} {}", installed_version.name, system_suffix));
         }
         else if installed_version != Default::default() {
-            logger::stdout(format!("- {}", installed_version.name));
+            logger::stdout(format!("- {} {}", installed_version.name, system_suffix));
         }
     }
 }
