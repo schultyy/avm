@@ -5,7 +5,7 @@ use node_version::NodeVersion;
 
 fn paths_without_avm() -> Vec<String> {
     let path_env = read_env().unwrap();
-    remove_avm_paths(split_path(&path_env))
+    strip_avm_paths(split_path(&path_env))
 }
 
 
@@ -22,7 +22,7 @@ fn split_path(path: &String) -> Vec<String> {
         .collect::<Vec<_>>()
 }
 
-fn remove_avm_paths(all_paths: Vec<String>) -> Vec<String> {
+fn strip_avm_paths(all_paths: Vec<String>) -> Vec<String> {
     all_paths.iter()
         .filter(|p| !p.contains(".avm"))
         .map(|p| p.to_string())
