@@ -176,6 +176,7 @@ fn uninstall(version: String) {
 
 fn print_version() {
     const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+    logger::stdout(format!("v{}", VERSION));
 }
 
 fn main() {
