@@ -39,6 +39,7 @@ fn call_system_node(paths_without_avm: Vec<String>) -> Result<String, Error> {
         Ok(r) => {
             let version = String::from_utf8_lossy(&r.stdout)
                 .replace("v", "")
+                .replace("\n", "")
                 .to_string();
             Ok(version)
         },
