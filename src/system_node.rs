@@ -1,6 +1,7 @@
 use std::env;
 use std::io::Error;
 use std::process::Command;
+use node_version::NodeVersion;
 
 fn paths_without_avm() -> Vec<String> {
     let path_env = read_env().unwrap();
@@ -59,6 +60,18 @@ pub fn system_node_path() -> Result<String, Error> {
     }
 }
 
-pub fn version() -> Result<String, Error> {
-    call_system_node(paths_without_avm())
+pub fn version() -> Result<NodeVersion, Error> {
+    let node_version = call_system_node(paths_without_avm());
+    let node_path = system_node_path();
+
+    if node_version.is_ok() && node_path.is_ok() {
+        Ok(NodeVersion {
+            path: node_path.unwrap(),
+            name: node_version.unwrap()
+        })
+    } else if node_version.is_err() {
+        Err(node_version.err().unwrap())
+    } else {
+        Err(node_path.err().unwrap())
+    }
 }

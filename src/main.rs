@@ -112,24 +112,24 @@ fn list_versions() {
         None => Default::default()
     };
 
+    let system_version = match system_node::version() {
+        Ok(v) => v,
+        Err(_) => Default::default()
+    };
+    let mut installed_versions = ls::ls_versions();
+    installed_versions.push(system_version);
+
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
-    for installed_version in ls::ls_versions() {
-        if installed_version == current_version {
+
+    for installed_version in installed_versions {
+        if installed_version.path == current_version.path {
             logger::stdout(format!("=> {}", installed_version.name));
         }
-        else {
+        else if installed_version != Default::default() {
             logger::stdout(format!("- {}", installed_version.name));
         }
     }
-    match system_node::version() {
-        Ok(version) => {
-            logger::stdout(format!("System: {}", version));
-        },
-        Err(_) => {
-            logger::stdout(format!("System: -"))
-        }
-    };
 }
 
 fn uninstall(version: String) {
@@ -164,7 +164,6 @@ fn uninstall(version: String) {
 
 fn print_version() {
     const VERSION: &'static str = env!("CARGO_PKG_VERSION");
-    println!("v{}", VERSION);
 }
 
 fn main() {

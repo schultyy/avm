@@ -25,17 +25,33 @@ fn is_version_directory(path: &String) -> bool {
     re.is_match(path)
 }
 
-pub fn current_version() -> Option<NodeVersion> {
+fn follow_symlink() -> Option<String> {
     let home_directory = setup::avm_directory();
-    let path = match fs::read_link(Path::new(&home_directory).join("bin")) {
-        Ok(s) => s,
-        _ => return None
-    };
+    let path = fs::read_link(Path::new(&home_directory).join("bin"));
+    if path.is_err() {
+        match fs::read_link(Path::new(&home_directory).join("bin").join("node")) {
+            Ok(p) => Some(p.as_os_str()
+                          .to_str()
+                          .unwrap()
+                          .into()),
+            Err(_) => None
+        }
+    } else {
+        Some(path.unwrap()
+             .as_os_str()
+             .to_str()
+             .unwrap()
+             .into())
+    }
+}
+
+pub fn current_version() -> Option<NodeVersion> {
     let re = Regex::new(r"\d+\.\d+\.\d+").unwrap();
-    let path_str = path.as_os_str().to_str()
-        .unwrap()
-        .into();
-    match re.captures_iter(path_str).next() {
+    let path_str = match follow_symlink() {
+        Some(p) => p,
+        None => return None
+    };
+    match re.captures_iter(&path_str).next() {
         Some(m) => {
             match m.at(0) {
                 Some(version) => {
@@ -47,7 +63,10 @@ pub fn current_version() -> Option<NodeVersion> {
                 None => None
             }
         },
-        None => None
+        None => Some(NodeVersion{
+            name: path_str.to_string(),
+            path: path_str.to_string()
+        })
     }
 }
 
