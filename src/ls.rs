@@ -3,6 +3,11 @@ use setup;
 use std::fs;
 use regex::Regex;
 
+pub struct NodeVersion {
+    pub path: String,
+    pub name: String
+}
+
 fn is_directory(path: &String) -> bool {
     match fs::metadata(path) {
         Ok(metadata) => metadata.is_dir(),
@@ -45,17 +50,21 @@ pub fn current_version() -> Option<String> {
     }
 }
 
-pub fn ls_versions() -> Vec<String> {
+pub fn ls_versions() -> Vec<NodeVersion> {
     if !setup::home_directory_existant() {
         return vec!();
     }
     let home = setup::avm_directory();
-    let mut paths = Vec::new();
+    let mut installed_versions = Vec::new();
     for path in fs::read_dir(home).unwrap() {
         let path_str = path.unwrap().path().display().to_string();
         if is_directory(&path_str) && is_version_directory(&path_str) {
-            paths.push(directory_name(&path_str));
+            let version = NodeVersion{
+                name: directory_name(&path_str),
+                path: path_str.clone()
+            };
+            installed_versions.push(version);
         }
     }
-    paths
+    installed_versions
 }

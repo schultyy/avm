@@ -113,12 +113,12 @@ fn list_versions() {
 
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
-    for version in ls::ls_versions() {
-        if version == current_version {
-            logger::stdout(format!("=> {}", version));
+    for installed_version in ls::ls_versions() {
+        if installed_version.name == current_version {
+            logger::stdout(format!("=> {}", installed_version.name));
         }
         else {
-            logger::stdout(format!("- {}", version));
+            logger::stdout(format!("- {}", installed_version.name));
         }
     }
     match system_node::version() {
