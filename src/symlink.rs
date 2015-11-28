@@ -5,12 +5,15 @@ use std::io::Error;
 use ls;
 use system_node;
 
-fn create_bin_dir() {
+fn create_bin_dir() -> Result<(), Error> {
     use std::fs;
     let avm_directory = setup::avm_directory();
-    setup::prepare();
+    match setup::prepare() {
+        Ok(_) => { },
+        Err(err) => return Err(err)
+    };
     let bin_directory = Path::new(&avm_directory).join("bin");
-    fs::create_dir(bin_directory);
+    fs::create_dir(bin_directory)
 }
 
 pub fn points_to_version(version: &String) -> bool {
@@ -45,7 +48,10 @@ pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
 pub fn symlink_to_system_binary(binary_name: String) -> Result<(), Error> {
     let avm_directory = setup::avm_directory();
     let bin_directory = Path::new(&avm_directory).join("bin");
-    create_bin_dir();
+    match create_bin_dir() {
+        Ok(_) => { },
+        Err(err) => return Err(err)
+    }
 
     let local_binary = bin_directory.join(&binary_name);
     let system_binary_path = system_node::path_for_binary(binary_name).unwrap_or_else(|_| String::new());
