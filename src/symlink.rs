@@ -19,7 +19,7 @@ pub fn points_to_version(version: &String) -> bool {
         None => return false
     };
 
-    &current_version == version
+    &current_version.name == version
 }
 
 pub fn remove_symlink() -> Result<(), Error> {

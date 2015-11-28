@@ -3,12 +3,15 @@ use setup;
 use std::fs;
 use regex::Regex;
 
+#[derive(Default)]
+#[derive(Debug)]
+#[derive(PartialEq)]
 pub struct NodeVersion {
     pub path: String,
     pub name: String
 }
 
-fn is_directory(path: &String) -> bool {
+fn is_directory<P: AsRef<Path>>(path: P) -> bool {
     match fs::metadata(path) {
         Ok(metadata) => metadata.is_dir(),
         Err(_)       => false
@@ -29,7 +32,7 @@ fn is_version_directory(path: &String) -> bool {
     re.is_match(path)
 }
 
-pub fn current_version() -> Option<String> {
+pub fn current_version() -> Option<NodeVersion> {
     let home_directory = setup::avm_directory();
     let path = match fs::read_link(Path::new(&home_directory).join("bin")) {
         Ok(s) => s,
@@ -42,7 +45,12 @@ pub fn current_version() -> Option<String> {
     match re.captures_iter(path_str).next() {
         Some(m) => {
             match m.at(0) {
-                Some(version) => Some(version.to_string()),
+                Some(version) => {
+                    Some(NodeVersion {
+                        name: version.to_string(),
+                        path: path_str.replace("/bin", "").to_string()
+                    })
+                }
                 None => None
             }
         },
@@ -61,7 +69,7 @@ pub fn ls_versions() -> Vec<NodeVersion> {
         if is_directory(&path_str) && is_version_directory(&path_str) {
             let version = NodeVersion{
                 name: directory_name(&path_str),
-                path: path_str.clone()
+                path: path_str.to_string()
             };
             installed_versions.push(version);
         }

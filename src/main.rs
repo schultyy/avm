@@ -108,13 +108,13 @@ fn use_version(version: String) {
 fn list_versions() {
     let current_version = match ls::current_version() {
         Some(v) => v,
-        None => String::new()
+        None => Default::default()
     };
 
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
     for installed_version in ls::ls_versions() {
-        if installed_version.name == current_version {
+        if installed_version == current_version {
             logger::stdout(format!("=> {}", installed_version.name));
         }
         else {
