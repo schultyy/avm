@@ -16,6 +16,8 @@ pub fn help() {
     logger::stdout(format!("avm install <version>\n"));
     logger::stdout(format!("Use a version: "));
     logger::stdout(format!("avm use <version>\n"));
+    logger::stdout(format!("Use system version: "));
+    logger::stdout(format!("avm use system\n"));
     logger::stdout(format!("List all installed versions:"));
     logger::stdout(format!("avm ls\n"));
     logger::stdout(format!("Uninstall a version:"));

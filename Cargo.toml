@@ -1,6 +1,6 @@
 [package]
 name = "avm"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Jan Schulte <hello@unexpected-co.de>"]
 [dependencies]
 hyper="0.6.10"

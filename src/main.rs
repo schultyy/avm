@@ -4,11 +4,14 @@ mod setup;
 mod downloader;
 mod archive_reader;
 mod ls;
+mod system_node;
 mod logger;
+mod node_version;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
 use std::env;
+use std::io::ErrorKind;
 
 fn install(version: String) {
     let home_directory = match setup::prepare() {
@@ -59,19 +62,22 @@ fn install(version: String) {
     logger::success(format!("Run avm use {} to use it", version));
 }
 
+fn remove_symlink() {
+    match symlink::remove_symlink() {
+        Err(err) => {
+            if err.kind() != std::io::ErrorKind::NotFound {
+                logger::stderr("Failed to remove symlink");
+                logger::stderr(format!("{:?}", err));
+                std::process::exit(1)
+            }
+        },
+        _ => { }
+    };
+}
+
 fn use_version(version: String) {
     if setup::has_version(&version) {
-        match symlink::remove_symlink() {
-            Err(err) => {
-                if err.kind() != std::io::ErrorKind::NotFound {
-                    logger::stderr("Failed to remove symlink");
-                    logger::stderr(format!("{:?}", err));
-                    std::process::exit(1)
-                }
-            },
-            _ => { }
-        };
-
+        remove_symlink();
         match symlink::symlink_to_version(&version) {
             Ok(_) => logger::success(format!("Now using node v{}", version)),
             Err(err) => {
@@ -80,7 +86,27 @@ fn use_version(version: String) {
                 std::process::exit(1)
             }
         };
-    } else {
+    }
+    else if version == "system" {
+        remove_symlink();
+        match symlink::symlink_to_system_binary("node".to_string()) {
+            Ok(_)       => logger::stdout("using system node"),
+            Err(err)    => {
+                if err.kind() == ErrorKind::NotFound {
+                    logger::stderr(format!("It appears that there's no node.js preinstalled on this system"));
+                    return;
+                } else {
+                    logger::stderr(format!("{:?}", err));
+                }
+            }
+        }
+
+        match symlink::symlink_to_system_binary("npm".to_string()) {
+            Ok(_)       => { },
+            Err(err)    => logger::stderr(format!("{:?}", err))
+        }
+    }
+    else {
         logger::stderr(format!("Version {} not installed", version));
         std::process::exit(1)
     }
@@ -89,16 +115,31 @@ fn use_version(version: String) {
 fn list_versions() {
     let current_version = match ls::current_version() {
         Some(v) => v,
-        None => String::new()
+        None => Default::default()
     };
+
+    let system_version = match system_node::version() {
+        Ok(v) => v,
+        Err(_) => Default::default()
+    };
+    let mut installed_versions = ls::ls_versions();
+    installed_versions.push(system_version.clone());
+
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
-    for version in ls::ls_versions() {
-        if version == current_version {
-            logger::stdout(format!("=> {}", version));
+
+    for installed_version in installed_versions {
+        let system_suffix = if installed_version == system_version {
+            String::from("(system)")
+        } else {
+            String::new()
+        };
+
+        if installed_version.path == current_version.path {
+            logger::stdout(format!("=> {} {}", installed_version.name, system_suffix));
         }
-        else {
-            logger::stdout(format!("- {}", version));
+        else if installed_version != Default::default() {
+            logger::stdout(format!("- {} {}", installed_version.name, system_suffix));
         }
     }
 }
