@@ -47,9 +47,9 @@ fn call_system_node(paths_without_avm: Vec<String>) -> Result<String, Error> {
     }
 }
 
-pub fn system_node_path() -> Result<String, Error> {
+pub fn path_for_binary(binary: String) -> Result<String, Error> {
     let output = Command::new("which")
-        .arg("node")
+        .arg(binary)
         .env("PATH", env::join_paths(paths_without_avm()).unwrap())
         .output();
     match output {
@@ -63,7 +63,7 @@ pub fn system_node_path() -> Result<String, Error> {
 
 pub fn version() -> Result<NodeVersion, Error> {
     let node_version = call_system_node(paths_without_avm());
-    let node_path = system_node_path();
+    let node_path = path_for_binary("node".to_string());
 
     if node_version.is_ok() && node_path.is_ok() {
         Ok(NodeVersion {

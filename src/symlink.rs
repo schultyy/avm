@@ -42,13 +42,13 @@ pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
     fs::symlink(destination_bin_path, bin_directory)
 }
 
-pub fn symlink_to_system_node() -> Result<(), Error> {
+pub fn symlink_to_system_binary(binary_name: String) -> Result<(), Error> {
     let avm_directory = setup::avm_directory();
     let bin_directory = Path::new(&avm_directory).join("bin");
     create_bin_dir();
 
-    let local_node  = bin_directory.join("node");
-    let system_node_path = system_node::system_node_path().unwrap_or_else(|err| String::new());
-    fs::symlink(system_node_path, local_node)
+    let local_binary = bin_directory.join(&binary_name);
+    let system_binary_path = system_node::path_for_binary(binary_name).unwrap_or_else(|_| String::new());
+    fs::symlink(system_binary_path, local_binary)
 }
 

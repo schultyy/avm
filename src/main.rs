@@ -89,7 +89,7 @@ fn use_version(version: String) {
     }
     else if version == "system" {
         remove_symlink();
-        match symlink::symlink_to_system_node() {
+        match symlink::symlink_to_system_binary("node".to_string()) {
             Ok(_)       => logger::stdout("using system node"),
             Err(err)    => {
                 if err.kind() == ErrorKind::NotFound {
