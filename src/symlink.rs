@@ -1,7 +1,7 @@
 use setup;
 use std::path::Path;
 use std::os::unix::fs;
-use std::io::{Error, ErrorKind};
+use std::io::Error;
 use ls;
 use system_node;
 
@@ -45,20 +45,27 @@ pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
     fs::symlink(destination_bin_path, bin_directory)
 }
 
-pub fn symlink_to_system_binary(binary_name: String) -> Result<(), Error> {
+fn symlink_to_system_binary(binary_name: String) -> Result<(), Error> {
     let avm_directory = setup::avm_directory();
     let bin_directory = Path::new(&avm_directory).join("bin");
-    match create_bin_dir() {
-        Ok(_) => { },
-        Err(err) => {
-            if err.kind() != ErrorKind::AlreadyExists {
-                return Err(err)
-            }
-        }
-    }
-
     let local_binary = bin_directory.join(&binary_name);
     let system_binary_path = system_node::path_for_binary(binary_name).unwrap_or_else(|_| String::new());
     fs::symlink(system_binary_path, local_binary)
 }
 
+
+pub fn create_symlinks_to_system_binaries() -> Result<(), Error> {
+    match create_bin_dir() {
+        Ok(_) => { },
+        Err(err) =>  return Err(err)
+    }
+
+    for binary in vec!["node", "npm"] {
+        match symlink_to_system_binary(binary.into()) {
+            Ok(_) => { },
+            Err(err) => return Err(err)
+        }
+    }
+
+    Ok(())
+}

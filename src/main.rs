@@ -89,7 +89,7 @@ fn use_version(version: String) {
     }
     else if version == "system" {
         remove_symlink();
-        match symlink::symlink_to_system_binary("node".to_string()) {
+        match symlink::create_symlinks_to_system_binaries() {
             Ok(_)       => logger::stdout("using system node"),
             Err(err)    => {
                 if err.kind() == ErrorKind::NotFound {
@@ -99,11 +99,6 @@ fn use_version(version: String) {
                     logger::stderr(format!("{:?}", err));
                 }
             }
-        }
-
-        match symlink::symlink_to_system_binary("npm".to_string()) {
-            Ok(_)       => { },
-            Err(err)    => logger::stderr(format!("{:?}", err))
         }
     }
     else {
