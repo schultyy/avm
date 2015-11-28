@@ -2,14 +2,7 @@ use std::path::Path;
 use setup;
 use std::fs;
 use regex::Regex;
-
-#[derive(Default)]
-#[derive(Debug)]
-#[derive(PartialEq)]
-pub struct NodeVersion {
-    pub path: String,
-    pub name: String
-}
+use node_version::NodeVersion;
 
 fn is_directory<P: AsRef<Path>>(path: P) -> bool {
     match fs::metadata(path) {

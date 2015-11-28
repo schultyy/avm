@@ -6,6 +6,7 @@ mod archive_reader;
 mod ls;
 mod system_node;
 mod logger;
+mod node_version;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
