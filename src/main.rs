@@ -7,6 +7,10 @@ mod ls;
 mod system_node;
 mod logger;
 mod node_version;
+mod os;
+
+#[macro_use]
+extern crate cfg_if;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
