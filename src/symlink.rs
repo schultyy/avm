@@ -1,11 +1,8 @@
 use setup;
 use std::path::Path;
-#[cfg(not(windows))]
-use std::os::unix::fs;
-#[cfg(windows)]
-use std::os::windows::fs;
 use std::io::Error;
 use ls;
+use os::symlink;
 use system_node;
 
 fn create_bin_dir() -> Result<(), Error> {
@@ -17,16 +14,6 @@ fn create_bin_dir() -> Result<(), Error> {
     };
     let bin_directory = Path::new(&avm_directory).join("bin");
     fs::create_dir(bin_directory)
-}
-
-#[cfg(target_os= "windows")]
-fn symlink<P: AsRef<Path>>(from: P, to: P) -> Result<(), Error> {
-    fs::symlink_dir(from, to)
-}
-
-#[cfg(not(target_os="windows"))]
-fn symlink<P: AsRef<Path>>(from: P, to: P) -> Result<(), Error> {
-    fs::symlink(from, to)
 }
 
 pub fn points_to_version(version: &String) -> bool {
