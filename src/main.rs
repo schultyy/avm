@@ -30,7 +30,8 @@ fn install(version: String) {
         std::process::exit(1)
     }
 
-    let archive_path = match downloader::download_source(&version, &home_directory) {
+    let downloader = downloader::Downloader::new();
+    let archive_path = match downloader.download_source(&version, &home_directory) {
         Ok(path)  => path,
         Err(err)    => {
             logger::stderr(format!("Download failed:\n{}", err));
