@@ -118,7 +118,9 @@ fn list_versions() {
         Err(_) => Default::default()
     };
     let mut installed_versions = ls::ls_versions();
-    installed_versions.push(system_version.clone());
+    if system_version != Default::default() {
+        installed_versions.push(system_version.clone());
+    }
 
     logger::stdout(format!("Listing all installed versions:"));
     logger::stdout(format!("(=>): current version"));
