@@ -24,7 +24,7 @@ function create_folder {
 }
 
 function download_source {
-  git clone git@github.com:schultyy/avm.git /tmp/avm
+  git clone https://github.com/schultyy/avm.git /tmp/avm
 }
 
 function cleanup {
