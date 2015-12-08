@@ -7,12 +7,35 @@ use hyper::header::Connection;
 use hyper::status::StatusCode;
 use os_type;
 
-pub struct Downloader;
+pub struct Downloader {
+    urls: Vec<Url>
+}
+
+struct Url {
+    pub url: String,
+    pub platform: os_type::OSType
+}
 
 impl Downloader {
 
     pub fn new() -> Downloader {
-        Downloader
+
+        let mut platform_urls = Vec::new();
+
+        let node_osx = Url {
+            url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-darwin-x64.tar.gz".into(),
+            platform: os_type::OSType::OSX
+        };
+        platform_urls.push(node_osx);
+
+        for os in vec![os_type::OSType::Ubuntu, os_type::OSType::Redhat] {
+            let u = Url {
+                url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-linux-x64.tar.gz".into(),
+                platform: os
+            };
+            platform_urls.push(u);
+        }
+        Downloader { urls: platform_urls }
     }
 
     fn build_filename(&self, directory: &String, version_str: &String) -> String {
@@ -43,14 +66,11 @@ impl Downloader {
     fn url_for_os_type(&self, version: &String) -> Option<String> {
         let platform = os_type::current_platform();
 
-        if platform == os_type::OSType::OSX {
-            Some(format!("https://nodejs.org/dist/v{version}/node-v{version}-darwin-x64.tar.gz", version=version))
-        }
-        else if platform == os_type::OSType::Ubuntu || platform == os_type::OSType::Redhat {
-            Some(format!("https://nodejs.org/dist/v{version}/node-v{version}-linux-x64.tar.gz", version=version))
-        }
-        else {
-            None
+        match self.urls.iter().find(|&u| u.platform == platform) {
+            Some(url) => {
+                Some(url.url.replace("{VERSION}", version))
+            },
+            None => None
         }
     }
 
