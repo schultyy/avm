@@ -75,3 +75,9 @@ Uninstall a version:
 $ avm uninstall 4.1.2
 ```
 
+Select the node version based on the `package.json` in the current directory:
+
+```bash
+$ avm autoselect
+```
+
