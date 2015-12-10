@@ -34,9 +34,13 @@ failed to run custom build command for `openssl-sys v0.6.6`
 ```
 
 make sure that you have the following package installed:
-
+Ubuntu:
 ```bash
-sudo apt-get install libssl-dev
+$ sudo apt-get install libssl-dev
+```
+RHEL:
+```bash
+$ sudo yum install openssl-devel 
 ```
 
 ### Supported platforms
