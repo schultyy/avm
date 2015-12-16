@@ -175,7 +175,8 @@ fn uninstall(version: String) {
 
 fn autoselect_version() {
     let cwd = env::current_dir().unwrap();
-    if !autoselect::has_package_json(&cwd) {
+    let selector = autoselect::AutoSelect::new(&cwd);
+    if !selector.has_package_json() {
         logger::stderr("No package.json found");
         std::process::exit(1)
     }
