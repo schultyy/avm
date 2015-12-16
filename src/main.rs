@@ -11,6 +11,7 @@ mod autoselect;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
+extern crate rustc_serialize;
 use std::env;
 use std::io::ErrorKind;
 
@@ -179,6 +180,11 @@ fn autoselect_version() {
     if !selector.has_package_json() {
         logger::stderr("No package.json found");
         std::process::exit(1)
+    }
+
+    match selector.specified_version() {
+        Ok(version) => logger::stdout(format!("found {} in package.json", version)),
+        Err(err) => logger::stderr(err)
     }
 }
 
