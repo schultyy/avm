@@ -1,14 +1,14 @@
 use std::path::{PathBuf, Path};
 use std::fs;
 
-pub struct AutoSelect {
+pub struct Selector {
     package_path: PathBuf
 }
 
-impl AutoSelect {
-    pub fn new(cwd: &Path) -> AutoSelect {
+impl Selector {
+    pub fn new(cwd: &Path) -> Selector {
         let package_file = cwd.join("package.json");
-        AutoSelect { package_path: package_file }
+        Selector { package_path: package_file }
     }
     pub fn has_package_json(&self) -> bool {
         match fs::metadata(&self.package_path){
