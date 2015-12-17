@@ -28,7 +28,7 @@ impl Selector {
         };
 
         match self.find_engine_key(&package_file) {
-            Some(version) => Ok(version),
+            Some(version) => Ok(version.replace("\"", "")),
             None => Err("No node engine specified".to_string())
         }
     }

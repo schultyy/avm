@@ -182,10 +182,16 @@ fn autoselect_version() {
         std::process::exit(1)
     }
 
-    match selector.specified_version() {
-        Ok(version) => logger::stdout(format!("found {} in package.json", version)),
-        Err(err) => logger::stderr(err)
-    }
+    let package_version = match selector.specified_version() {
+        Ok(version) => version,
+        Err(err) => {
+            logger::stderr(err);
+            std::process::exit(1)
+        }
+    };
+    logger::stdout(format!("found {} in package.json", package_version));
+
+    use_version(package_version);
 }
 
 fn print_version() {
