@@ -7,9 +7,11 @@ mod ls;
 mod system_node;
 mod logger;
 mod node_version;
+mod autoselect;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
+extern crate rustc_serialize;
 use std::env;
 use std::io::ErrorKind;
 
@@ -172,6 +174,26 @@ fn uninstall(version: String) {
     }
 }
 
+fn autoselect_version() {
+    let cwd = env::current_dir().unwrap();
+    let selector = autoselect::Selector::new(&cwd);
+    if !selector.has_package_json() {
+        logger::stderr("No package.json found");
+        std::process::exit(1)
+    }
+
+    let package_version = match selector.specified_version() {
+        Ok(version) => version,
+        Err(err) => {
+            logger::stderr(err);
+            std::process::exit(1)
+        }
+    };
+    logger::stdout(format!("found {} in package.json", package_version));
+
+    use_version(package_version);
+}
+
 fn print_version() {
     const VERSION: &'static str = env!("CARGO_PKG_VERSION");
     logger::stdout(format!("v{}", VERSION));
@@ -199,6 +221,9 @@ fn main() {
         cli::CmdOption::Uninstall => {
             let version = cmd_args.args.first().unwrap().clone();
             uninstall(version);
+        },
+        cli::CmdOption::Autoselect => {
+            autoselect_version();
         },
         cli::CmdOption::Version => {
             print_version();
