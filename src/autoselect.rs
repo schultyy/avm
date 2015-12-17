@@ -4,6 +4,8 @@ use std::io::Error;
 use std::fs::File;
 use std::fs;
 use rustc_serialize::json::Json;
+use semver::Version;
+use semver::VersionReq;
 
 pub struct Selector {
     package_path: PathBuf
@@ -31,6 +33,19 @@ impl Selector {
             Some(version) => Ok(version.replace("\"", "")),
             None => Err("No node engine specified".to_string())
         }
+    }
+
+    pub fn match_version(&self, package_version: String, installed_versions: Vec<String>) -> Option<String> {
+        let installed_semver = installed_versions.iter().map(|v| Version::parse(&v).unwrap());
+        let version_requirement = VersionReq::parse(&package_version).unwrap();
+
+        for installed in installed_semver {
+            if version_requirement.matches(&installed) {
+                return Some(installed.to_string())
+            }
+        }
+
+        None
     }
 
     fn find_engine_key(&self, json_file: &String) -> Option<String> {
