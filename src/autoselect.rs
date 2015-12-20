@@ -7,6 +7,21 @@ use rustc_serialize::json::Json;
 use semver::Version;
 use semver::VersionReq;
 
+
+fn match_current_node(package_version: String, installed_versions: Vec<String>) -> Option<String> {
+    let installed_semver = installed_versions.iter().map(|v| Version::parse(&v).unwrap());
+    let version_requirement = VersionReq::parse(&package_version).unwrap();
+
+    for installed in installed_semver {
+        if version_requirement.matches(&installed) {
+            return Some(installed.to_string())
+        }
+    }
+    None
+}
+
+
+
 pub struct Selector {
     package_path: PathBuf
 }
@@ -36,16 +51,7 @@ impl Selector {
     }
 
     pub fn match_version(&self, package_version: String, installed_versions: Vec<String>) -> Option<String> {
-        let installed_semver = installed_versions.iter().map(|v| Version::parse(&v).unwrap());
-        let version_requirement = VersionReq::parse(&package_version).unwrap();
-
-        for installed in installed_semver {
-            if version_requirement.matches(&installed) {
-                return Some(installed.to_string())
-            }
-        }
-
-        None
+        match_current_node(package_version, installed_versions)
     }
 
     fn find_engine_key(&self, json_file: &String) -> Option<String> {
