@@ -85,4 +85,5 @@ Select the node version based on the `package.json` in the current directory:
 $ avm autoselect
 ```
 
-Note that this depends on the `engine` property set in the `package.json`.
+Note that this depends on the `engines` property set in the `package.json`.
+
