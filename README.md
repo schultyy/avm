@@ -9,6 +9,15 @@ Since Rust has become stable this year, I took the opportunity and began to writ
 
 ## Installation
 
+### Via Cargo Install
+
+If you use Cargo 0.6.0 (ships with Rust 1.5) you can install avm via:
+
+```bash
+$ cargo install avm
+```
+
+### From Source
 It installs from source, for that you need to have git and Rust stable installed.
 
 To install avm on your system, run the following:
@@ -40,7 +49,7 @@ $ sudo apt-get install libssl-dev
 ```
 RHEL:
 ```bash
-$ sudo yum install openssl-devel 
+$ sudo yum install openssl-devel
 ```
 
 ### Supported platforms
