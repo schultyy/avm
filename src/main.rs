@@ -12,6 +12,7 @@ extern crate hyper;
 extern crate regex;
 extern crate os_type;
 extern crate rustc_serialize;
+extern crate semver;
 use std::env;
 use std::io::ErrorKind;
 
@@ -190,8 +191,17 @@ fn autoselect_version() {
         }
     };
     logger::stdout(format!("found {} in package.json", package_version));
-
-    use_version(package_version);
+    let installed = ls::ls_versions()
+        .iter()
+        .map(|v| v.name.clone())
+        .collect::<Vec<String>>();
+    match selector.match_version(package_version.clone(), installed){
+        Some(v) => use_version(v),
+        None => {
+            logger::stderr(format!("No installed version satisfies requirement {}", package_version));
+            std::process::exit(1)
+        }
+    }
 }
 
 fn print_version() {

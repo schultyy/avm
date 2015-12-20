@@ -4,6 +4,36 @@ use std::io::Error;
 use std::fs::File;
 use std::fs;
 use rustc_serialize::json::Json;
+use semver::Version;
+use semver::VersionReq;
+
+
+fn match_current_node(package_version: String, installed_versions: Vec<String>) -> Option<String> {
+    let installed_semver = installed_versions.iter().map(|v| Version::parse(&v).unwrap());
+    let version_requirement = VersionReq::parse(&package_version).unwrap();
+
+    for installed in installed_semver {
+        if version_requirement.matches(&installed) {
+            return Some(installed.to_string())
+        }
+    }
+    None
+}
+
+fn match_legacy_node(package_version: String, installed_versions: Vec<String>) -> Option<String> {
+    let installed_vers = installed_versions.iter().map(|v| Version::parse(&v).unwrap());
+    let version_requirement = match Version::parse(&package_version) {
+        Ok(v)  => v,
+        Err(_) => return None
+    };
+
+    for installed in installed_vers {
+        if version_requirement == installed {
+            return Some(installed.to_string())
+        }
+    }
+    None
+}
 
 pub struct Selector {
     package_path: PathBuf
@@ -30,6 +60,16 @@ impl Selector {
         match self.find_engine_key(&package_file) {
             Some(version) => Ok(version.replace("\"", "")),
             None => Err("No node engine specified".to_string())
+        }
+    }
+
+    pub fn match_version(&self, package_version: String, installed_versions: Vec<String>) -> Option<String> {
+        let version = Version::parse(&package_version).unwrap();
+        if version.major == 0 {
+            match_legacy_node(package_version, installed_versions)
+        }
+        else {
+            match_current_node(package_version, installed_versions)
         }
     }
 
