@@ -21,6 +21,17 @@ fn match_current_node(package_version: String, installed_versions: Vec<String>) 
 }
 
 fn match_legacy_node(package_version: String, installed_versions: Vec<String>) -> Option<String> {
+    let installed_vers = installed_versions.iter().map(|v| Version::parse(&v).unwrap());
+    let version_requirement = match Version::parse(&package_version) {
+        Ok(v)  => v,
+        Err(_) => return None
+    };
+
+    for installed in installed_vers {
+        if version_requirement == installed {
+            return Some(installed.to_string())
+        }
+    }
     None
 }
 
