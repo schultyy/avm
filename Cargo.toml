@@ -1,6 +1,6 @@
 [package]
 name = "avm"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["Jan Schulte <hello@unexpected-co.de>"]
 license = "MIT"
 description = "Manages node.js installations"
