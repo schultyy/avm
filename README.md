@@ -85,5 +85,6 @@ Select the node version based on the `package.json` in the current directory:
 $ avm autoselect
 ```
 
-Note that this depends on the `engines` property set in the `package.json`.
-
+Note that this depends on the `engines` property set in the `package.json`. If `engines`
+specifies a node version < 4.x, then it checks for strict equality only. It does not support any
+modifiers like `^` or ranges for these versions.
