@@ -20,7 +20,9 @@ fn match_current_node(package_version: String, installed_versions: Vec<String>) 
     None
 }
 
-
+fn match_legacy_node(package_version: String, installed_versions: Vec<String>) -> Option<String> {
+    None
+}
 
 pub struct Selector {
     package_path: PathBuf
@@ -51,7 +53,13 @@ impl Selector {
     }
 
     pub fn match_version(&self, package_version: String, installed_versions: Vec<String>) -> Option<String> {
-        match_current_node(package_version, installed_versions)
+        let version = Version::parse(&package_version).unwrap();
+        if version.major == 0 {
+            match_legacy_node(package_version, installed_versions)
+        }
+        else {
+            match_current_node(package_version, installed_versions)
+        }
     }
 
     fn find_engine_key(&self, json_file: &String) -> Option<String> {
