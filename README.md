@@ -52,6 +52,11 @@ RHEL:
 $ sudo yum install openssl-devel
 ```
 
+Mac:
+```bash
+export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2e/include
+```
+
 ### Supported platforms
 
 Right now, it is possible to run avm on the major Linux distributions and Mac OS X. There is no support for Windows right now. See [#33](https://github.com/schultyy/avm/issues/33) for details.
