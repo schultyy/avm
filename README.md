@@ -17,6 +17,8 @@ If you use Cargo 0.6.0 (ships with Rust 1.5) you can install avm via:
 $ cargo install avm
 ```
 
+After installation you need to add avm to your `PATH` variable as described in [After Installation](https://github.com/schultyy/avm#After-Installation).
+
 ### From Source
 It installs from source, for that you need to have git and Rust stable installed.
 
@@ -28,11 +30,6 @@ curl https://raw.githubusercontent.com/schultyy/avm/master/install.sh | bash
 
 If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](https://www.rust-lang.org/downloads.html) and download the version for your operating system.
 
-After installation finished, you need to make sure that `avm` is in your `PATH`. For that you need to append the following line to either `~/.zshrc` or `~/.bash_profile`:
-
-```bash
-export PATH=~/.avm/:~/.avm/bin:$PATH
-```
 
 If you encounter the following compilation error on a Linux based system:
 
@@ -55,6 +52,15 @@ $ sudo yum install openssl-devel
 Mac:
 ```bash
 export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2e/include
+```
+
+### After installation
+
+After installation finished, you need to make sure that `avm` is in your `PATH`.
+For that you need to append the following line to either `~/.zshrc` or `~/.bash_profile`:
+
+```bash
+export PATH=~/.avm/:~/.avm/bin:$PATH
 ```
 
 ### Supported platforms
