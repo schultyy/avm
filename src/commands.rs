@@ -61,7 +61,8 @@ pub mod ruby {
             Err(err) => logger::stderr(format!("Error occured while removing archive file\n{}", err))
         };
 
-        let configure_result = compiler::call_configure_script(&tmp_dir, &version_directory);
+        let compiler = compiler::Compiler::new(&tmp_dir);
+        let configure_result = compiler.call_configure_script(&version_directory);
         if !configure_result.status.success() {
             logger::stderr("Configure failed");
             logger::stderr(String::from_utf8_lossy(&configure_result.stderr));
