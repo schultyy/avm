@@ -140,12 +140,13 @@ pub mod ruby {
 
     pub fn list_versions() {
         let home = HomeDirectory::new(language::ruby());
-        let current_version = match ls::current_version(&home) {
+        let ls = ls::Ls::new(home.clone());
+        let current_version = match ls.current_version() {
             Some(v) => v,
             None => Default::default()
         };
 
-        let installed_versions = ls::ls_versions(&home);
+        let installed_versions = ls.ls_versions();
 
         logger::stdout(format!("Listing all installed versions:"));
         logger::stdout(format!("(=>): current version"));
@@ -305,7 +306,8 @@ pub mod node {
 
     pub fn list_versions() {
         let home = HomeDirectory::new(language::nodejs());
-        let current_version = match ls::current_version(&home) {
+        let ls = ls::Ls::new(home.clone());
+        let current_version = match ls.current_version() {
             Some(v) => v,
             None => Default::default()
         };
@@ -314,7 +316,7 @@ pub mod node {
             Ok(v) => v,
             Err(_) => Default::default()
         };
-        let mut installed_versions = ls::ls_versions(&home);
+        let mut installed_versions = ls.ls_versions();
         if system_version != Default::default() {
             installed_versions.push(system_version.clone());
         }
@@ -387,7 +389,7 @@ pub mod node {
             }
         };
         logger::stdout(format!("found {} in package.json", package_version));
-        let installed = ls::ls_versions(&home)
+        let installed = ls::Ls::new(home.clone()).ls_versions()
             .iter()
             .map(|v| v.name.clone())
             .collect::<Vec<String>>();

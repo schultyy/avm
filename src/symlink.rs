@@ -28,7 +28,8 @@ impl Symlink {
     }
 
     pub fn points_to_version(&self, version: &String) -> bool {
-        let current_version = match ls::current_version(&self.home) {
+        let ls = ls::Ls::new(self.home.clone());
+        let current_version = match ls.current_version() {
             Some(v) => v,
             None => return false
         };
