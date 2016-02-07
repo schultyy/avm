@@ -9,6 +9,7 @@ mod commands;
 mod language;
 mod home_directory;
 mod autoselect;
+mod compiler;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;

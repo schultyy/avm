@@ -5,6 +5,7 @@ pub mod ruby {
     use downloader;
     use archive_reader;
     use home_directory::HomeDirectory;
+    use compiler;
 
     pub fn install(version: &str) {
         let lang = language::ruby();
@@ -37,12 +38,20 @@ pub mod ruby {
         let tmp_dir = match home_directory.create_version_tmp_directory(&version.to_string()) {
             Ok(tmp_dir) => tmp_dir,
             Err(err) => {
+                logger::stderr(format!("Failed to create tmp directory for version\n{}", err));
+                std::process::exit(1)
+            }
+        };
+
+        let version_directory = match home_directory.create_version_directory(&version.to_string()) {
+            Ok(d) => d,
+            Err(err) => {
                 logger::stderr(format!("Failed to create directory for version\n{}", err));
                 std::process::exit(1)
             }
         };
 
-        match archive_reader::decompress(&archive_path, home_directory.language_dir, &format!("{}_tmp", &version.to_string())) {
+        match archive_reader::decompress(&archive_path, &home_directory.language_dir, &format!("{}_tmp", &version.to_string())) {
             Ok(_) => { },
             Err(err) => logger::stderr(format!("Error occured\n{}", err))
         };
@@ -51,6 +60,14 @@ pub mod ruby {
             Ok(_) => { },
             Err(err) => logger::stderr(format!("Error occured while removing archive file\n{}", err))
         };
+
+        let configure_result = compiler::call_configure_script(&tmp_dir, &version_directory);
+        if !configure_result.status.success() {
+            logger::stderr("Configure failed");
+            logger::stderr(String::from_utf8_lossy(&configure_result.stderr));
+            std::process::exit(1)
+        }
+        logger::stdout(format!("Configure with --prefix={} complete", version_directory));
     }
 }
 
@@ -103,7 +120,7 @@ pub mod node {
             }
         };
 
-        match archive_reader::decompress(&archive_path, home_directory.language_dir, &version.to_string()) {
+        match archive_reader::decompress(&archive_path, &home_directory.language_dir, &version.to_string()) {
             Ok(_) => { },
             Err(err) => logger::stderr(format!("Error occured\n{}", err))
         };
