@@ -2,9 +2,9 @@
 # The ls command is not supposed to print any other directories
 # then version directories
 
-mkdir -p ~/.avm/bin
+mkdir -p ~/.avm/node/bin
 
-cargo run ls | grep bin
+cargo run ls node | grep bin
 
 if [ $? -eq 0 ]
 then

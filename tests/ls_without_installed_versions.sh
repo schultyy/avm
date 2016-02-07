@@ -6,7 +6,7 @@
 # (=>): current version
 # =>  (system)
 
-cargo run ls | grep "=>  (system)"
+cargo run ls node | grep "=>  (system)"
 
 if [ $? -eq 0 ]
 then
