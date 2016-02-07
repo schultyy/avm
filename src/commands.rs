@@ -159,6 +159,37 @@ pub mod ruby {
             }
         }
     }
+
+    pub fn uninstall(version: String) {
+        let home = HomeDirectory::new(language::ruby());
+        let symlink = Symlink::new(home.clone());
+        if home.has_version(&version) {
+            if symlink.points_to_version(&version) {
+                match symlink.remove_symlink() {
+                    Err(err) => {
+                        if err.kind() != std::io::ErrorKind::NotFound {
+                            logger::stderr("Failed to remove symlink");
+                            logger::stderr(format!("{:?}", err));
+                            std::process::exit(1)
+                        }
+                    },
+                    _ => { }
+                }
+            }
+
+            match home.remove_version(&version) {
+                Ok(_) => logger::stdout(format!("Successfully removed version {}", version)),
+                Err(err) => {
+                    logger::stderr(format!("Failed to remove version {}", version));
+                    logger::stderr(format!("{:?}", err));
+                }
+            }
+        }
+        else {
+            logger::stderr(format!("Version {} is not installed", version));
+            std::process::exit(1)
+        }
+    }
 }
 
 pub mod node {

@@ -84,6 +84,9 @@ fn handle_ruby(args: Args) {
     if args.cmd_ls {
         commands::ruby::list_versions();
     }
+    if args.cmd_uninstall {
+        commands::ruby::uninstall(args.arg_version.clone());
+    }
 }
 
 fn main() {
