@@ -84,6 +84,18 @@ pub mod ruby {
             logger::stderr(String::from_utf8_lossy(&configure_result.stderr));
             std::process::exit(1)
         }
+        logger::stdout("make install finished");
+        logger::stdout("Cleaning up");
+        match home_directory.remove_tmp_version_directory(version) {
+            Ok(()) => { },
+            Err(err) => {
+                logger::stderr("Failed to clean up tmp directory");
+                logger::stderr(format!("{:?}", err));
+                std::process::exit(1)
+            }
+        }
+
+        logger::success(format!("Successfully installed Ruby {}", &version));
     }
 }
 

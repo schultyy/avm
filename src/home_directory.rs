@@ -92,5 +92,9 @@ impl HomeDirectory {
     pub fn remove_version(&self, version_str: &str) -> Result<(), Error> {
         fs::remove_dir_all(self.version_path(version_str))
     }
+
+    pub fn remove_tmp_version_directory(&self, version_str: &str) -> Result<(), Error> {
+        fs::remove_dir_all(self.version_temp_path(version_str))
+    }
 }
 
