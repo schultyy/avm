@@ -6,36 +6,18 @@ use hyper::client::response::Response;
 use hyper::header::Connection;
 use hyper::status::StatusCode;
 use os_type;
+use language::{Language, Url};
 
 pub struct Downloader {
     urls: Vec<Url>
 }
 
-struct Url {
-    pub url: String,
-    pub platform: os_type::OSType
-}
 
 impl Downloader {
 
-    pub fn new() -> Downloader {
+    pub fn new(lang: Language) -> Downloader {
 
-        let mut platform_urls = Vec::new();
-
-        let node_osx = Url {
-            url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-darwin-x64.tar.gz".into(),
-            platform: os_type::OSType::OSX
-        };
-        platform_urls.push(node_osx);
-
-        for os in vec![os_type::OSType::Arch, os_type::OSType::Ubuntu, os_type::OSType::Redhat] {
-            let u = Url {
-                url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-linux-x64.tar.gz".into(),
-                platform: os
-            };
-            platform_urls.push(u);
-        }
-        Downloader { urls: platform_urls }
+        Downloader { urls: lang.download_urls }
     }
 
     fn build_filename(&self, directory: &String, version_str: &String) -> String {

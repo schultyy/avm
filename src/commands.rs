@@ -30,7 +30,8 @@ pub mod node {
     use std::env;
 
     pub fn install(version: &str) {
-        let home_directory = HomeDirectory::new(language::nodejs());
+        let lang = language::nodejs();
+        let home_directory = HomeDirectory::new(lang.clone());
         match home_directory.prepare() {
             Ok(()) => { },
             Err(err) => {
@@ -45,7 +46,7 @@ pub mod node {
             std::process::exit(1)
         }
 
-        let downloader = downloader::Downloader::new();
+        let downloader = downloader::Downloader::new(lang.clone());
         let archive_path = match downloader.download_source(&version.to_string(), &home_directory.language_dir) {
             Ok(path)  => path,
             Err(err)    => {
