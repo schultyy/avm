@@ -1,5 +1,4 @@
 pub mod node {
-    use setup;
     use logger;
     use archive_reader;
     use symlink;
@@ -8,13 +7,13 @@ pub mod node {
     use ls;
     use system_node;
     use language;
+    use home_directory::HomeDirectory;
     use std::io::ErrorKind;
 
-    pub fn install(version: String) {
-        let home_directory = match setup::prepare(language::nodejs()) {
-            Ok(directory) => {
-                directory
-            },
+    pub fn install(version: &str) {
+        let home_directory = HomeDirectory::new(language::nodejs());
+        match home_directory.prepare() {
+            Ok(()) => { },
             Err(err) => {
                 logger::stderr("Failed to initialize home directory");
                 logger::stderr(format!("{:?}", err));
@@ -22,23 +21,22 @@ pub mod node {
             }
         };
 
-        if setup::has_version(&version) {
+        if home_directory.has_version(&version) {
             logger::stderr(format!("Version {} is already installed", version));
             std::process::exit(1)
         }
 
         let downloader = downloader::Downloader::new();
-        let archive_path = match downloader.download_source(&version, &home_directory) {
+        let archive_path = match downloader.download_source(&version.to_string(), &home_directory.language_dir) {
             Ok(path)  => path,
             Err(err)    => {
                 logger::stderr(format!("Download failed:\n{}", err));
                 std::process::exit(1)
             }
         };
-        let destination_path = setup::avm_directory();
-        logger::stdout(format!("Unzipping to {}", destination_path));
+        logger::stdout(format!("Unzipping to {}", home_directory.language_dir));
 
-        match setup::create_version_directory(&version) {
+        match home_directory.create_version_directory(&version.to_string()) {
             Ok(_) => { },
             Err(err) => {
                 logger::stderr(format!("Failed to create directory for version\n{}", err));
@@ -46,7 +44,7 @@ pub mod node {
             }
         };
 
-        match archive_reader::decompress(&archive_path, destination_path, &version) {
+        match archive_reader::decompress(&archive_path, home_directory.language_dir, &version.to_string()) {
             Ok(_) => { },
             Err(err) => logger::stderr(format!("Error occured\n{}", err))
         };
@@ -61,7 +59,8 @@ pub mod node {
     }
 
     pub fn remove_symlink() {
-        match symlink::remove_symlink() {
+        let home = HomeDirectory::new(language::nodejs());
+        match symlink::remove_symlink(&home) {
             Err(err) => {
                 if err.kind() != std::io::ErrorKind::NotFound {
                     logger::stderr("Failed to remove symlink");
@@ -74,9 +73,10 @@ pub mod node {
     }
 
     pub fn use_version(version: String) {
-        if setup::has_version(&version) {
+        let home = HomeDirectory::new(language::nodejs());
+        if home.has_version(&version) {
             remove_symlink();
-            match symlink::symlink_to_version(&version) {
+            match symlink::symlink_to_version(&home, &version) {
                 Ok(_) => logger::success(format!("Now using node v{}", version)),
                 Err(err) => {
                     logger::stderr("Failed to set symlink");
@@ -87,7 +87,7 @@ pub mod node {
         }
         else if version == "system" {
             remove_symlink();
-            match symlink::create_symlinks_to_system_binaries() {
+            match symlink::create_symlinks_to_system_binaries(&home) {
                 Ok(_)       => logger::stdout("using system node"),
                 Err(err)    => {
                     if err.kind() == ErrorKind::NotFound {
@@ -106,7 +106,8 @@ pub mod node {
     }
 
     pub fn list_versions() {
-        let current_version = match ls::current_version() {
+        let home = HomeDirectory::new(language::nodejs());
+        let current_version = match ls::current_version(&home) {
             Some(v) => v,
             None => Default::default()
         };
@@ -115,7 +116,7 @@ pub mod node {
             Ok(v) => v,
             Err(_) => Default::default()
         };
-        let mut installed_versions = ls::ls_versions();
+        let mut installed_versions = ls::ls_versions(&home);
         if system_version != Default::default() {
             installed_versions.push(system_version.clone());
         }
@@ -140,10 +141,11 @@ pub mod node {
     }
 
     pub fn uninstall(version: String) {
-        if setup::has_version(&version) {
+        let home = HomeDirectory::new(language::nodejs());
+        if home.has_version(&version) {
 
-            if symlink::points_to_version(&version) {
-                match symlink::remove_symlink() {
+            if symlink::points_to_version(&home, &version) {
+                match symlink::remove_symlink(&home) {
                     Err(err) => {
                         if err.kind() != std::io::ErrorKind::NotFound {
                             logger::stderr("Failed to remove symlink");
@@ -155,7 +157,7 @@ pub mod node {
                 }
             }
 
-            match setup::remove_version(&version) {
+            match home.remove_version(&version) {
                 Ok(_) => logger::stdout(format!("Successfully removed version {}", version)),
                 Err(err) => {
                     logger::stderr(format!("Failed to remove version {}", version));

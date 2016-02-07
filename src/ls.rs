@@ -1,8 +1,8 @@
 use std::path::Path;
-use setup;
 use std::fs;
 use regex::Regex;
 use node_version::NodeVersion;
+use home_directory::HomeDirectory;
 
 fn is_directory<P: AsRef<Path>>(path: P) -> bool {
     match fs::metadata(path) {
@@ -25,11 +25,10 @@ fn is_version_directory(path: &String) -> bool {
     re.is_match(path)
 }
 
-fn follow_symlink() -> Option<String> {
-    let home_directory = setup::avm_directory();
-    let path = fs::read_link(Path::new(&home_directory).join("bin"));
+fn follow_symlink(home: &HomeDirectory) -> Option<String> {
+    let path = fs::read_link(Path::new(&home.language_dir).join("bin"));
     if path.is_err() {
-        match fs::read_link(Path::new(&home_directory).join("bin").join("node")) {
+        match fs::read_link(Path::new(&home.language_dir).join("bin").join("node")) {
             Ok(p) => Some(p.as_os_str()
                           .to_str()
                           .unwrap()
@@ -45,9 +44,9 @@ fn follow_symlink() -> Option<String> {
     }
 }
 
-pub fn current_version() -> Option<NodeVersion> {
+pub fn current_version(home: &HomeDirectory) -> Option<NodeVersion> {
     let re = Regex::new(r"\d+\.\d+\.\d+").unwrap();
-    let path_str = match follow_symlink() {
+    let path_str = match follow_symlink(home) {
         Some(p) => p,
         None => return None
     };
@@ -70,13 +69,12 @@ pub fn current_version() -> Option<NodeVersion> {
     }
 }
 
-pub fn ls_versions() -> Vec<NodeVersion> {
-    if !setup::home_directory_present() {
+pub fn ls_versions(home: &HomeDirectory) -> Vec<NodeVersion> {
+    if !home.is_present() {
         return vec!();
     }
-    let home = setup::avm_directory();
     let mut installed_versions = Vec::new();
-    for path in fs::read_dir(home).unwrap() {
+    for path in fs::read_dir(&home.language_dir).unwrap() {
         let path_str = path.unwrap().path().display().to_string();
         if is_directory(&path_str) && is_version_directory(&path_str) {
             let version = NodeVersion{

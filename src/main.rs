@@ -1,6 +1,5 @@
 mod cli;
 mod symlink;
-mod setup;
 mod downloader;
 mod archive_reader;
 mod ls;
@@ -9,6 +8,7 @@ mod logger;
 mod node_version;
 mod commands;
 mod language;
+mod home_directory;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
@@ -29,7 +29,7 @@ fn main() {
     {
         cli::CmdOption::Install => {
             let version = cmd_args.args.first().unwrap().clone();
-            commands::node::install(version);
+            commands::node::install(&version);
         },
         cli::CmdOption::Use => {
             let version = cmd_args.args.first().unwrap().clone();
