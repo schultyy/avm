@@ -5,6 +5,7 @@ pub mod ruby {
     use downloader;
     use archive_reader;
     use home_directory::HomeDirectory;
+    use symlink::Symlink;
     use compiler;
 
     pub fn install(version: &str) {
@@ -96,6 +97,44 @@ pub mod ruby {
         }
 
         logger::success(format!("Successfully installed Ruby {}", &version));
+    }
+
+    pub fn remove_symlink() {
+        let home = HomeDirectory::new(language::ruby());
+        match Symlink::new(home).remove_symlink() {
+            Err(err) => {
+                if err.kind() != std::io::ErrorKind::NotFound {
+                    logger::stderr("Failed to remove symlink");
+                    logger::stderr(format!("{:?}", err));
+                    std::process::exit(1)
+                }
+            },
+            _ => { }
+        };
+    }
+
+    pub fn use_version(version: String) {
+        let home = HomeDirectory::new(language::ruby());
+        let symlink = Symlink::new(home.clone());
+        if home.has_version(&version) {
+            remove_symlink();
+            match symlink.symlink_to_version(&version) {
+                Ok(_) => logger::success(format!("Now using Ruby v{}", version)),
+                Err(err) => {
+                    logger::stderr("Failed to set symlink");
+                    logger::stderr(format!("{:?}", err));
+                    std::process::exit(1)
+                }
+            };
+        }
+        else if version == "system" {
+            logger::stderr("using system ruby is not yet supported");
+            std::process::exit(1)
+        }
+        else {
+            logger::stderr(format!("Version {} not installed", version));
+            std::process::exit(1)
+        }
     }
 }
 
