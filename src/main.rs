@@ -73,6 +73,12 @@ fn handle_node(args: Args) {
     }
 }
 
+fn handle_ruby(args: Args) {
+    if args.cmd_install {
+        commands::ruby::install(&args.arg_version);
+    }
+}
+
 fn main() {
     let args: Args = Docopt::new(USAGE)
         .and_then(|d| d.decode())
@@ -84,7 +90,7 @@ fn main() {
     }
 
     match &args.arg_language[..] {
-        "ruby" => { },
+        "ruby" => handle_ruby(args),
         "node" => handle_node(args),
         _ => {
             logger::stderr(format!("Unsupported language {}", args.arg_language));

@@ -1,3 +1,20 @@
+pub mod ruby {
+    use logger;
+    use language;
+    use home_directory::HomeDirectory;
+
+    pub fn install(version: &str) {
+        let home_directory = HomeDirectory::new(language::ruby());
+        match home_directory.prepare() {
+            Ok(()) => { },
+            Err(err) => {
+                logger::stderr("Failed to initialize home directory");
+                logger::stderr(format!("{:?}", err));
+            }
+        };
+    }
+}
+
 pub mod node {
     use logger;
     use archive_reader;
