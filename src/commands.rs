@@ -3,6 +3,7 @@ pub mod ruby {
     use language;
     use std;
     use downloader;
+    use archive_reader;
     use home_directory::HomeDirectory;
 
     pub fn install(version: &str) {
@@ -39,6 +40,16 @@ pub mod ruby {
                 logger::stderr(format!("Failed to create directory for version\n{}", err));
                 std::process::exit(1)
             }
+        };
+
+        match archive_reader::decompress(&archive_path, home_directory.language_dir, &version.to_string()) {
+            Ok(_) => { },
+            Err(err) => logger::stderr(format!("Error occured\n{}", err))
+        };
+
+        match archive_reader::remove_archive_file(&archive_path) {
+            Ok(_) => { },
+            Err(err) => logger::stderr(format!("Error occured while removing archive file\n{}", err))
         };
     }
 }
