@@ -4,6 +4,7 @@ use std::env;
 use std::io::Error;
 use language::Language;
 
+#[derive(Clone)]
 pub struct HomeDirectory {
     language: Language,
     pub language_dir: String

@@ -1,13 +1,13 @@
 pub mod node {
     use logger;
     use archive_reader;
-    use symlink;
     use std;
     use downloader;
     use ls;
     use system_node;
     use language;
     use home_directory::HomeDirectory;
+    use symlink::Symlink;
     use std::io::ErrorKind;
 
     pub fn install(version: &str) {
@@ -60,7 +60,7 @@ pub mod node {
 
     pub fn remove_symlink() {
         let home = HomeDirectory::new(language::nodejs());
-        match symlink::remove_symlink(&home) {
+        match Symlink::new(home).remove_symlink() {
             Err(err) => {
                 if err.kind() != std::io::ErrorKind::NotFound {
                     logger::stderr("Failed to remove symlink");
@@ -74,9 +74,10 @@ pub mod node {
 
     pub fn use_version(version: String) {
         let home = HomeDirectory::new(language::nodejs());
+        let symlink = Symlink::new(home.clone());
         if home.has_version(&version) {
             remove_symlink();
-            match symlink::symlink_to_version(&home, &version) {
+            match symlink.symlink_to_version(&version) {
                 Ok(_) => logger::success(format!("Now using node v{}", version)),
                 Err(err) => {
                     logger::stderr("Failed to set symlink");
@@ -87,7 +88,7 @@ pub mod node {
         }
         else if version == "system" {
             remove_symlink();
-            match symlink::create_symlinks_to_system_binaries(&home) {
+            match symlink.create_symlinks_to_system_binaries() {
                 Ok(_)       => logger::stdout("using system node"),
                 Err(err)    => {
                     if err.kind() == ErrorKind::NotFound {
@@ -142,10 +143,11 @@ pub mod node {
 
     pub fn uninstall(version: String) {
         let home = HomeDirectory::new(language::nodejs());
+        let symlink = Symlink::new(home.clone());
         if home.has_version(&version) {
 
-            if symlink::points_to_version(&home, &version) {
-                match symlink::remove_symlink(&home) {
+            if symlink.points_to_version(&version) {
+                match symlink.remove_symlink() {
                     Err(err) => {
                         if err.kind() != std::io::ErrorKind::NotFound {
                             logger::stderr("Failed to remove symlink");
