@@ -1,9 +1,16 @@
 use os_type;
 
 #[derive(Clone)]
+pub enum PackageType {
+    Binary,
+    Source
+}
+
+#[derive(Clone)]
 pub struct Url {
     pub url: &'static str,
-    pub platform: os_type::OSType
+    pub platform: os_type::OSType,
+    pub package_type: PackageType
 }
 
 #[derive(Clone)]
@@ -17,14 +24,16 @@ pub fn nodejs() -> Language {
 
     let node_osx = Url {
         url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-darwin-x64.tar.gz".into(),
-        platform: os_type::OSType::OSX
+        platform: os_type::OSType::OSX,
+        package_type: PackageType::Binary
     };
     platform_urls.push(node_osx);
 
     for os in vec![os_type::OSType::Arch, os_type::OSType::Ubuntu, os_type::OSType::Redhat] {
         let u = Url {
             url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-linux-x64.tar.gz".into(),
-            platform: os
+            platform: os,
+            package_type: PackageType::Binary
         };
         platform_urls.push(u);
     }
