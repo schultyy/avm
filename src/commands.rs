@@ -6,9 +6,11 @@ pub mod node {
     use ls;
     use system_node;
     use language;
+    use autoselect;
     use home_directory::HomeDirectory;
     use symlink::Symlink;
     use std::io::ErrorKind;
+    use std::env;
 
     pub fn install(version: &str) {
         let home_directory = HomeDirectory::new(language::nodejs());
@@ -170,6 +172,36 @@ pub mod node {
         else {
             logger::stderr(format!("Version {} is not installed", version));
             std::process::exit(1)
+        }
+    }
+
+    pub fn autoselect_version() {
+        let cwd = env::current_dir().unwrap();
+        let home = HomeDirectory::new(language::nodejs());
+        let selector = autoselect::Selector::new(&cwd);
+        if !selector.has_package_json() {
+            logger::stderr("No package.json found");
+            std::process::exit(1)
+        }
+
+        let package_version = match selector.specified_version() {
+            Ok(version) => version,
+            Err(err) => {
+                logger::stderr(err);
+                std::process::exit(1)
+            }
+        };
+        logger::stdout(format!("found {} in package.json", package_version));
+        let installed = ls::ls_versions(&home)
+            .iter()
+            .map(|v| v.name.clone())
+            .collect::<Vec<String>>();
+        match selector.match_version(package_version.clone(), installed){
+            Some(v) => use_version(v),
+            None => {
+                logger::stderr(format!("No installed version satisfies requirement {}", package_version));
+                std::process::exit(1)
+            }
         }
     }
 }

@@ -9,9 +9,12 @@ mod node_version;
 mod commands;
 mod language;
 mod home_directory;
+mod autoselect;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;
+extern crate rustc_serialize;
+extern crate semver;
 use std::env;
 
 fn print_version() {
@@ -41,6 +44,9 @@ fn main() {
         cli::CmdOption::Uninstall => {
             let version = cmd_args.args.first().unwrap().clone();
             commands::node::uninstall(version);
+        },
+        cli::CmdOption::Autoselect => {
+            commands::node::autoselect_version();
         },
         cli::CmdOption::Version => {
             print_version();

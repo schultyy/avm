@@ -7,6 +7,7 @@ pub enum CmdOption {
     Help,
     Uninstall,
     Version,
+    Autoselect,
     Unknown
 }
 
@@ -22,6 +23,8 @@ pub fn help() {
     logger::stdout(format!("avm ls\n"));
     logger::stdout(format!("Uninstall a version:"));
     logger::stdout(format!("avm uninstall <version>\n"));
+    logger::stdout(format!("avm autoselect"));
+    logger::stdout(format!("Selects node version based on current package.json\n"));
     logger::stdout(format!("Print version number:"));
     logger::stdout(format!("avm -v\n"));
     logger::stdout(format!("Print this help menu:"));
@@ -52,6 +55,9 @@ pub fn process_arguments(args: &Vec<String>) -> Command {
     }
     else if command == "uninstall" {
         Command{option: CmdOption::Uninstall, args: vec!(args[1].clone()) }
+    }
+    else if command == "autoselect" {
+        Command{option: CmdOption::Autoselect, args: vec!() }
     }
     else if command == "-v" {
         Command{option: CmdOption::Version, args: vec!() }

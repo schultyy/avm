@@ -9,6 +9,17 @@ Since Rust has become stable this year, I took the opportunity and began to writ
 
 ## Installation
 
+### Via Cargo Install
+
+If you use Cargo 0.6.0 (ships with Rust 1.5) you can install avm via:
+
+```bash
+$ cargo install avm
+```
+
+After installation you need to add avm to your `PATH` variable as described in [After Installation](https://github.com/schultyy/avm#After-Installation).
+
+### From Source
 It installs from source, for that you need to have git and Rust stable installed.
 
 To install avm on your system, run the following:
@@ -19,11 +30,6 @@ curl https://raw.githubusercontent.com/schultyy/avm/master/install.sh | bash
 
 If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](https://www.rust-lang.org/downloads.html) and download the version for your operating system.
 
-After installation finished, you need to make sure that `avm` is in your `PATH`. For that you need to append the following line to either `~/.zshrc` or `~/.bash_profile`:
-
-```bash
-export PATH=~/.avm/:~/.avm/bin:$PATH
-```
 
 If you encounter the following compilation error on a Linux based system:
 
@@ -34,9 +40,27 @@ failed to run custom build command for `openssl-sys v0.6.6`
 ```
 
 make sure that you have the following package installed:
+Ubuntu:
+```bash
+$ sudo apt-get install libssl-dev
+```
+RHEL:
+```bash
+$ sudo yum install openssl-devel
+```
+
+Mac:
+```bash
+export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2e/include
+```
+
+### After installation
+
+After installation finished, you need to make sure that `avm` is in your `PATH`.
+For that you need to append the following line to either `~/.zshrc` or `~/.bash_profile`:
 
 ```bash
-sudo apt-get install libssl-dev
+export PATH=~/.avm/:~/.avm/bin:$PATH
 ```
 
 ### Supported platforms
@@ -75,3 +99,12 @@ Uninstall a version:
 $ avm uninstall 4.1.2
 ```
 
+Select the node version based on the `package.json` in the current directory:
+
+```bash
+$ avm autoselect
+```
+
+Note that this depends on the `engines` property set in the `package.json`. If `engines`
+specifies a node version < 4.x, then it checks for strict equality only. It does not support any
+modifiers like `^` or ranges for these versions.

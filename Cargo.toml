@@ -1,9 +1,14 @@
 [package]
 name = "avm"
-version = "0.3.3"
+version = "0.6.0"
 authors = ["Jan Schulte <hello@unexpected-co.de>"]
+license = "MIT"
+description = "Manages node.js installations"
+repository = "https://github.com/schultyy/avm"
 [dependencies]
 hyper="0.6.10"
 regex="0.1.41"
-os_type="0.2.1"
+os_type="0.5.0"
 term = "0.2"
+rustc-serialize = "0.3"
+semver = "0.2.0"

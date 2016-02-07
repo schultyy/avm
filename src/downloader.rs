@@ -28,7 +28,7 @@ impl Downloader {
         };
         platform_urls.push(node_osx);
 
-        for os in vec![os_type::OSType::Ubuntu, os_type::OSType::Redhat] {
+        for os in vec![os_type::OSType::Arch, os_type::OSType::Ubuntu, os_type::OSType::Redhat] {
             let u = Url {
                 url: "https://nodejs.org/dist/v{VERSION}/node-v{VERSION}-linux-x64.tar.gz".into(),
                 platform: os
