@@ -49,21 +49,7 @@ struct Args {
     flag_version: bool
 }
 
-fn main() {
-    let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.decode())
-        .unwrap_or_else(|e| e.exit());
-
-    if args.flag_version {
-        logger::stdout(format!("avm -- v{}", VERSION));
-        process::exit(0);
-    }
-
-    if !language::supported().contains(&&args.arg_language[..]) {
-        logger::stderr(format!("Unsupported language {}", args.arg_language));
-        process::exit(1);
-    }
-
+fn handle_node(args: Args) {
     if args.cmd_install {
         commands::node::install(&args.arg_version);
     }
@@ -84,5 +70,25 @@ fn main() {
 
     if args.cmd_autoselect {
         commands::node::autoselect_version();
+    }
+}
+
+fn main() {
+    let args: Args = Docopt::new(USAGE)
+        .and_then(|d| d.decode())
+        .unwrap_or_else(|e| e.exit());
+
+    if args.flag_version {
+        logger::stdout(format!("avm -- v{}", VERSION));
+        process::exit(0);
+    }
+
+    match &args.arg_language[..] {
+        "ruby" => { },
+        "node" => handle_node(args),
+        _ => {
+            logger::stderr(format!("Unsupported language {}", args.arg_language));
+            process::exit(1)
+        }
     }
 }
