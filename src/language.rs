@@ -45,8 +45,18 @@ pub fn nodejs() -> Language {
 }
 
 pub fn ruby() -> Language {
+    let mut platform_urls = Vec::new();
+
+    for os in vec![os_type::OSType::Arch, os_type::OSType::Ubuntu, os_type::OSType::Redhat, os_type::OSType::OSX] {
+        let u = Url {
+            url: "https://cache.ruby-lang.org/pub/ruby/{VERSION_SHORT}/ruby-{VERSION}.tar.gz",
+            platform: os,
+            package_type: PackageType::Source
+        };
+        platform_urls.push(u);
+    }
     Language {
         name: "ruby",
-        download_urls: vec!()
+        download_urls: platform_urls
     }
 }

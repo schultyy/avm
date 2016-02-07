@@ -1,15 +1,43 @@
 pub mod ruby {
     use logger;
     use language;
+    use std;
+    use downloader;
     use home_directory::HomeDirectory;
 
     pub fn install(version: &str) {
-        let home_directory = HomeDirectory::new(language::ruby());
+        let lang = language::ruby();
+        let home_directory = HomeDirectory::new(lang.clone());
         match home_directory.prepare() {
             Ok(()) => { },
             Err(err) => {
                 logger::stderr("Failed to initialize home directory");
                 logger::stderr(format!("{:?}", err));
+                std::process::exit(1)
+            }
+        };
+
+
+        if home_directory.has_version(&version) {
+            logger::stderr(format!("Version {} is already installed", version));
+            std::process::exit(1)
+        }
+
+        let downloader = downloader::Downloader::new(lang.clone());
+        let archive_path = match downloader.download_source(&version.to_string(), &home_directory.language_dir) {
+            Ok(path)  => path,
+            Err(err)    => {
+                logger::stderr(format!("Download failed:\n{}", err));
+                std::process::exit(1)
+            }
+        };
+        logger::stdout(format!("Unzipping to {}", home_directory.language_dir));
+
+        match home_directory.create_version_directory(&version.to_string()) {
+            Ok(_) => { },
+            Err(err) => {
+                logger::stderr(format!("Failed to create directory for version\n{}", err));
+                std::process::exit(1)
             }
         };
     }

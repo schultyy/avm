@@ -7,6 +7,7 @@ use hyper::header::Connection;
 use hyper::status::StatusCode;
 use os_type;
 use language::{Language, Url};
+use semver::Version;
 
 pub struct Downloader {
     urls: Vec<Url>
@@ -50,7 +51,14 @@ impl Downloader {
 
         match self.urls.iter().find(|&u| u.platform == platform) {
             Some(url) => {
-                Some(url.url.replace("{VERSION}", version))
+                if url.url.contains("{VERSION_SHORT}") {
+                    let semver_version = Version::parse(version).expect(&format!("Malformed Version {}", version));
+                    let short_version = format!("{}.{}", semver_version.major, semver_version.minor);
+                    Some(url.url.replace("{VERSION}", version)
+                         .replace("{VERSION_SHORT}", &short_version))
+                } else {
+                    Some(url.url.replace("{VERSION}", version))
+                }
             },
             None => None
         }
