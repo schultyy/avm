@@ -19,4 +19,19 @@ impl Compiler {
             .output()
             .expect("Failed to call Configure script")
     }
+
+    pub fn make(&self) -> Output {
+        Command::new("make")
+            .current_dir(Path::new(&self.working_dir))
+            .output()
+            .expect("Failed to call make")
+    }
+
+    pub fn make_install(&self) -> Output {
+        Command::new("make")
+            .arg("install")
+            .current_dir(Path::new(&self.working_dir))
+            .output()
+            .expect("Failed to call make install")
+    }
 }

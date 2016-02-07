@@ -69,6 +69,21 @@ pub mod ruby {
             std::process::exit(1)
         }
         logger::stdout(format!("Configure with --prefix={} complete", version_directory));
+        logger::stdout("performing make");
+        let make_result = compiler.make();
+        if !make_result.status.success() {
+            logger::stderr("make failed");
+            logger::stderr(String::from_utf8_lossy(&configure_result.stderr));
+            std::process::exit(1)
+        }
+
+        logger::stdout("performing make install");
+        let make_install_result = compiler.make_install();
+        if !make_install_result.status.success() {
+            logger::stderr("make install failed");
+            logger::stderr(String::from_utf8_lossy(&configure_result.stderr));
+            std::process::exit(1)
+        }
     }
 }
 
