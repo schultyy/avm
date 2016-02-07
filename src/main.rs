@@ -54,6 +54,16 @@ fn main() {
         .and_then(|d| d.decode())
         .unwrap_or_else(|e| e.exit());
 
+    if args.flag_version {
+        logger::stdout(format!("avm -- v{}", VERSION));
+        process::exit(0);
+    }
+
+    if !language::supported().contains(&&args.arg_language[..]) {
+        logger::stderr(format!("Unsupported language {}", args.arg_language));
+        process::exit(1);
+    }
+
     if args.cmd_install {
         commands::node::install(&args.arg_version);
         process::exit(0);
@@ -82,9 +92,5 @@ fn main() {
         process::exit(0);
     }
 
-    if args.flag_version {
-        println!("avm -- v{}", VERSION);
-        process::exit(0);
-    }
 
 }
