@@ -66,31 +66,23 @@ fn main() {
 
     if args.cmd_install {
         commands::node::install(&args.arg_version);
-        process::exit(0);
     }
 
     if args.cmd_use && args.cmd_system {
         commands::node::use_version("system".into());
-        process::exit(0);
     } else if args.cmd_use && !args.cmd_system {
         commands::node::use_version(args.arg_version.clone());
-        process::exit(0);
     }
 
     if args.cmd_ls {
         commands::node::list_versions();
-        process::exit(0);
     }
 
     if args.cmd_uninstall {
         commands::node::uninstall(args.arg_version.clone());
-        process::exit(0);
     }
 
     if args.cmd_autoselect {
         commands::node::autoselect_version();
-        process::exit(0);
     }
-
-
 }
