@@ -24,11 +24,11 @@ const USAGE: &'static str = "
 avm
 
 Usage:
-  avm install <version>
-  avm use (<version>|system)
-  avm ls
-  avm uninstall <version>
-  avm autoselect
+  avm install <language> <version>
+  avm use <language> (<version>|system)
+  avm ls <language>
+  avm uninstall <language> <version>
+  avm autoselect <language>
   avm [options]
 
 Options:
@@ -45,6 +45,7 @@ struct Args {
     cmd_uninstall: bool,
     cmd_autoselect: bool,
     arg_version: String,
+    arg_language: String,
     flag_version: bool
 }
 
