@@ -2,10 +2,16 @@
 
 ## Motivation
 
-Right now to install multiple versions of node.js there's [nvm](https://github.com/creationix/nvm) available. It does a decent job but there's one disadvantage: It's written in Shell. On the one hand that's nice because it's easy to install on Unix machines, but on the other hand it's not usable on Windows machines and Shell code is not easy to understand. At least for me.
+If you want to install multiple versions of node.js or Ruby on your machine, there are mostly tools available written in Shell ([nvm](https://github.com/creationix/nvm), [rvm](https://rvm.io/), [rbenv](https://github.com/rbenv/rbenv)).
+On the one hand that's nice because it's easy to install on Unix machines, but on the other hand it's not usable on Windows machines and Shell code is not easy to understand. At least for me.
 Especially the latter reason is important for me. It is not that easy to find a person who can maintain Shell code and also it's not that easy to figure out where to look when something goes wrong.
+Since Rust has become stable, I took the opportunity and began to write a replacement tool. It's called avm as abbreviation for "All version manager".
+Right now, I manages:
 
-Since Rust has become stable this year, I took the opportunity and began to write a replacement for nvm. It's called avm as abbreviation for "All version manager". In the future I want to be able to not only install node.js but also Ruby and Python on my machine in a convenient way. The other advantage is since Rust runs on many platforms, there's also the possibility to run avm on machines without Bash e.g. Windows.
+- ✅ node.js
+- ✅ Ruby 
+
+The other advantage is since Rust runs on many platforms, there's also the possibility to run avm on machines without Bash e.g. Windows.
 
 ## Installation
 
@@ -60,7 +66,7 @@ After installation finished, you need to make sure that `avm` is in your `PATH`.
 For that you need to append the following line to either `~/.zshrc` or `~/.bash_profile`:
 
 ```bash
-export PATH=~/.avm/:~/.avm/bin:$PATH
+export PATH=~/.avm/:~/.avm/node/bin:~/.avm/ruby/bin:$PATH
 ```
 
 ### Supported platforms
@@ -69,34 +75,36 @@ Right now, it is possible to run avm on the major Linux distributions and Mac OS
 
 ## Usage
 
+### node.js
+
 Install a new node version:
 
 ```bash
-$ avm install 4.1.2
+$ avm install node 4.1.2
 ```
 
 Please note, that right now avm installs precompiled versions of Node.js. There is no supported yet for installing from source.
 
 Use `4.1.2` by default:
 ```bash
-$ avm use 4.1.2
+$ avm use node 4.1.2
 ```
 Use your system node version:
 
 ```bash
-$ avm use system
+$ avm use node system
 ```
 
 List all installed versions:
 
 ```bash
-$ avm ls
+$ avm node ls
 ```
 
 Uninstall a version:
 
 ```bash
-$ avm uninstall 4.1.2
+$ avm uninstall node 4.1.2
 ```
 
 Select the node version based on the `package.json` in the current directory:
@@ -104,7 +112,33 @@ Select the node version based on the `package.json` in the current directory:
 ```bash
 $ avm autoselect
 ```
-
 Note that this depends on the `engines` property set in the `package.json`. If `engines`
 specifies a node version < 4.x, then it checks for strict equality only. It does not support any
 modifiers like `^` or ranges for these versions.
+
+### Ruby
+
+Install a new Ruby version:
+
+```bash
+$ avm install Ruby 2.3.0
+```
+
+Please note, that it installs from source only. It grabs the source tarballs from [ruby-lang.org](https://cache.ruby-lang.org/pub/ruby/). Right now it installs versions only which do not have a `-pxyz` suffix in their url.
+
+Use `2.3.0` by default:
+```bash
+$ avm use ruby 2.3.0
+```
+
+List all installed versions:
+
+```bash
+$ avm ruby ls
+```
+
+Uninstall a version:
+
+```bash
+$ avm uninstall ruby 4.1.2
+```
