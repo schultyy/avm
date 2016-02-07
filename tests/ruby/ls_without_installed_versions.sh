@@ -6,10 +6,10 @@
 # (=>): current version
 # =>  (system)
 
-cargo run ls | grep "=>  (system)"
+cargo run ls ruby | grep "(=>): current version"
 
 if [ $? -eq 0 ]
 then
-  echo "Printed system node version even it doesn't exist"
+  echo "Printed system ruby version even it doesn't exist"
   exit 1
 fi

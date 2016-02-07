@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cargo run autoselect
+cargo run autoselect node
 
 if [ $? -eq 0 ]; then
   echo "Should error with exit code != 0 when package.json is not there"
