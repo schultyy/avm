@@ -1,5 +1,6 @@
 pub mod ruby {
     use logger;
+    use ls;
     use language;
     use std;
     use downloader;
@@ -134,6 +135,28 @@ pub mod ruby {
         else {
             logger::stderr(format!("Version {} not installed", version));
             std::process::exit(1)
+        }
+    }
+
+    pub fn list_versions() {
+        let home = HomeDirectory::new(language::ruby());
+        let current_version = match ls::current_version(&home) {
+            Some(v) => v,
+            None => Default::default()
+        };
+
+        let installed_versions = ls::ls_versions(&home);
+
+        logger::stdout(format!("Listing all installed versions:"));
+        logger::stdout(format!("(=>): current version"));
+
+        for installed_version in installed_versions {
+            if installed_version.path == current_version.path {
+                logger::stdout(format!("=> {}", installed_version.name));
+            }
+            else {
+                logger::stdout(format!("- {}", installed_version.name));
+            }
         }
     }
 }

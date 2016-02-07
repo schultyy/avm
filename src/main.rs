@@ -81,6 +81,9 @@ fn handle_ruby(args: Args) {
     if args.cmd_use {
         commands::ruby::use_version(args.arg_version.clone());
     }
+    if args.cmd_ls {
+        commands::ruby::list_versions();
+    }
 }
 
 fn main() {
