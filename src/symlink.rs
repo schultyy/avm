@@ -4,11 +4,12 @@ use std::os::unix::fs;
 use std::io::Error;
 use ls;
 use system_node;
+use language;
 
 fn create_bin_dir() -> Result<(), Error> {
     use std::fs;
     let avm_directory = setup::avm_directory();
-    match setup::prepare() {
+    match setup::prepare(language::nodejs()) {
         Ok(_) => { },
         Err(err) => return Err(err)
     };
@@ -39,8 +40,8 @@ pub fn remove_symlink() -> Result<(), Error> {
 pub fn symlink_to_version(version_str: &String) -> Result<(), Error> {
     let avm_directory = setup::avm_directory();
     let destination_bin_path = Path::new(&avm_directory)
-                                        .join(version_str)
-                                        .join("bin");
+        .join(version_str)
+        .join("bin");
     let bin_directory = Path::new(&avm_directory).join("bin");
     fs::symlink(destination_bin_path, bin_directory)
 }

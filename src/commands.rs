@@ -7,10 +7,11 @@ pub mod node {
     use downloader;
     use ls;
     use system_node;
+    use language;
     use std::io::ErrorKind;
 
     pub fn install(version: String) {
-        let home_directory = match setup::prepare() {
+        let home_directory = match setup::prepare(language::nodejs()) {
             Ok(directory) => {
                 directory
             },

@@ -8,6 +8,7 @@ mod system_node;
 mod logger;
 mod node_version;
 mod commands;
+mod language;
 extern crate hyper;
 extern crate regex;
 extern crate os_type;

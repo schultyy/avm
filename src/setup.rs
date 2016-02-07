@@ -2,6 +2,7 @@ use std::path::Path;
 use std::fs;
 use std::env;
 use std::io::Error;
+use language::Language;
 
 fn version_path(version: &String) -> String {
     Path::new(&avm_directory()).join(version)
@@ -24,12 +25,18 @@ pub fn home_directory_present() -> bool {
     }
 }
 
-pub fn prepare() -> Result<String, Error> {
+pub fn prepare(lang: Language) -> Result<String, Error> {
     if home_directory_present() {
         return Ok(avm_directory());
     }
-    match fs::create_dir(avm_directory().clone()) {
-        Ok(_) => Ok(avm_directory()),
+    let language_dir = Path::new(&avm_directory()).join(lang.name);
+    match fs::create_dir_all(&language_dir) {
+        Ok(_) => {
+            Ok(language_dir.as_path()
+               .to_str()
+               .unwrap()
+               .to_string())
+        },
         Err(err) => Err(err)
     }
 }
