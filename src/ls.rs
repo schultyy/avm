@@ -34,7 +34,7 @@ fn follow_symlink() -> Option<String> {
                           .to_str()
                           .unwrap()
                           .into()),
-            Err(_) => None
+                          Err(_) => None
         }
     } else {
         Some(path.unwrap()
@@ -71,7 +71,7 @@ pub fn current_version() -> Option<NodeVersion> {
 }
 
 pub fn ls_versions() -> Vec<NodeVersion> {
-    if !setup::home_directory_existant() {
+    if !setup::home_directory_present() {
         return vec!();
     }
     let home = setup::avm_directory();
