@@ -41,6 +41,14 @@ impl HomeDirectory {
             .to_string()
     }
 
+    fn version_temp_path(&self, version: &str) -> String {
+        Path::new(&self.language_dir).join(format!("{}_tmp", version))
+            .as_path()
+            .to_str()
+            .unwrap()
+            .to_string()
+    }
+
     pub fn is_present(&self) -> bool {
         match fs::metadata(&self.language_dir) {
             Ok(metadata) => metadata.is_dir(),
@@ -60,6 +68,14 @@ impl HomeDirectory {
 
     pub fn create_version_directory(&self, version: &String) -> Result<String, Error> {
         let path = self.version_path(version);
+        match fs::create_dir(&path) {
+            Ok(_) => Ok(path.clone()),
+            Err(err) => Err(err)
+        }
+    }
+
+    pub fn create_version_tmp_directory(&self, version: &String) -> Result<String, Error> {
+        let path = self.version_temp_path(version);
         match fs::create_dir(&path) {
             Ok(_) => Ok(path.clone()),
             Err(err) => Err(err)

@@ -34,15 +34,15 @@ pub mod ruby {
         };
         logger::stdout(format!("Unzipping to {}", home_directory.language_dir));
 
-        match home_directory.create_version_directory(&version.to_string()) {
-            Ok(_) => { },
+        let tmp_dir = match home_directory.create_version_tmp_directory(&version.to_string()) {
+            Ok(tmp_dir) => tmp_dir,
             Err(err) => {
                 logger::stderr(format!("Failed to create directory for version\n{}", err));
                 std::process::exit(1)
             }
         };
 
-        match archive_reader::decompress(&archive_path, home_directory.language_dir, &version.to_string()) {
+        match archive_reader::decompress(&archive_path, home_directory.language_dir, &format!("{}_tmp", &version.to_string())) {
             Ok(_) => { },
             Err(err) => logger::stderr(format!("Error occured\n{}", err))
         };
