@@ -78,14 +78,18 @@ fn handle_ruby(args: Args) {
     if args.cmd_install {
         commands::ruby::install(&args.arg_version);
     }
-    if args.cmd_use {
+    else if args.cmd_use {
         commands::ruby::use_version(args.arg_version.clone());
     }
-    if args.cmd_ls {
+    else if args.cmd_ls {
         commands::ruby::list_versions();
     }
-    if args.cmd_uninstall {
+    else if args.cmd_uninstall {
         commands::ruby::uninstall(args.arg_version.clone());
+    }
+    else {
+        logger::stderr("Unknown command");
+        std::process::exit(1);
     }
 }
 
