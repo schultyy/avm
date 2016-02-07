@@ -1,4 +1,3 @@
-mod cli;
 mod symlink;
 mod downloader;
 mod archive_reader;
@@ -15,48 +14,76 @@ extern crate regex;
 extern crate os_type;
 extern crate rustc_serialize;
 extern crate semver;
-use std::env;
+extern crate docopt;
 
-fn print_version() {
-    const VERSION: &'static str = env!("CARGO_PKG_VERSION");
-    logger::stdout(format!("v{}", VERSION));
+use docopt::Docopt;
+use std::process;
+
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+const USAGE: &'static str = "
+avm
+
+Usage:
+  avm install <version>
+  avm use (<version>|system)
+  avm ls
+  avm uninstall <version>
+  avm autoselect
+  avm [options]
+
+Options:
+  -h --help
+  --version
+";
+
+#[derive(Debug, RustcDecodable)]
+struct Args {
+    cmd_ls: bool,
+    cmd_use: bool,
+    cmd_system: bool,
+    cmd_install: bool,
+    cmd_uninstall: bool,
+    cmd_autoselect: bool,
+    arg_version: String,
+    flag_version: bool
 }
 
 fn main() {
-    let args: Vec<String> = env::args()
-        .skip(1)
-        .collect();
-    let cmd_args = cli::process_arguments(&args);
+    let args: Args = Docopt::new(USAGE)
+        .and_then(|d| d.decode())
+        .unwrap_or_else(|e| e.exit());
 
-    match cmd_args.option
-    {
-        cli::CmdOption::Install => {
-            let version = cmd_args.args.first().unwrap().clone();
-            commands::node::install(&version);
-        },
-        cli::CmdOption::Use => {
-            let version = cmd_args.args.first().unwrap().clone();
-            commands::node::use_version(version);
-        },
-        cli::CmdOption::Ls => {
-            commands::node::list_versions();
-        },
-        cli::CmdOption::Uninstall => {
-            let version = cmd_args.args.first().unwrap().clone();
-            commands::node::uninstall(version);
-        },
-        cli::CmdOption::Autoselect => {
-            commands::node::autoselect_version();
-        },
-        cli::CmdOption::Version => {
-            print_version();
-        },
-        cli::CmdOption::Help => {
-            cli::help();
-        }
-        _ => {
-            cli::help();
-        }
-    };
+    if args.cmd_install {
+        commands::node::install(&args.arg_version);
+        process::exit(0);
+    }
+
+    if args.cmd_use && args.cmd_system {
+        commands::node::use_version("system".into());
+        process::exit(0);
+    } else if args.cmd_use && !args.cmd_system {
+        commands::node::use_version(args.arg_version.clone());
+        process::exit(0);
+    }
+
+    if args.cmd_ls {
+        commands::node::list_versions();
+        process::exit(0);
+    }
+
+    if args.cmd_uninstall {
+        commands::node::uninstall(args.arg_version.clone());
+        process::exit(0);
+    }
+
+    if args.cmd_autoselect {
+        commands::node::autoselect_version();
+        process::exit(0);
+    }
+
+    if args.flag_version {
+        println!("avm -- v{}", VERSION);
+        process::exit(0);
+    }
 
 }
