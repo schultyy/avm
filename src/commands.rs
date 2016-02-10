@@ -98,6 +98,7 @@ pub mod ruby {
         }
 
         logger::success(format!("Successfully installed Ruby {}", &version));
+        logger::success(format!("Run avm use  ruby {} to use it", version));
     }
 
     pub fn remove_symlink() {
@@ -253,7 +254,7 @@ pub mod node {
         };
 
         logger::success(format!("Successfully installed version {}", version));
-        logger::success(format!("Run avm use {} to use it", version));
+        logger::success(format!("Run avm use  node {} to use it", version));
     }
 
     pub fn remove_symlink() {
