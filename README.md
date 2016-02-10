@@ -6,7 +6,7 @@ If you want to install multiple versions of node.js or Ruby on your machine, the
 On the one hand that's nice because it's easy to install on Unix machines, but on the other hand it's not usable on Windows machines and Shell code is not easy to understand. At least for me.
 Especially the latter reason is important for me. It is not that easy to find a person who can maintain Shell code and also it's not that easy to figure out where to look when something goes wrong.
 Since Rust has become stable, I took the opportunity and began to write a replacement tool. It's called avm as abbreviation for "All version manager".
-Right now, I manages:
+Right now it manages:
 
 - ✅ node.js
 - ✅ Ruby 
@@ -121,7 +121,7 @@ modifiers like `^` or ranges for these versions.
 Install a new Ruby version:
 
 ```bash
-$ avm install Ruby 2.3.0
+$ avm install ruby 2.3.0
 ```
 
 Please note, that it installs from source only. It grabs the source tarballs from [ruby-lang.org](https://cache.ruby-lang.org/pub/ruby/). Right now it installs versions only which do not have a `-pxyz` suffix in their url.
