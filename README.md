@@ -38,8 +38,9 @@ If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](h
 
 ### Required Packages
 
-- zlib development packages (`zlib1g-dev`)
-- readline support (`libreadline6` `libreadline6-dev`)
+- zlib development packages (Ubuntu: `zlib1g-dev`)
+- readline support (Ubuntu: `libreadline6` `libreadline6-dev`)
+- C Compiler (Ubuntu: `build-essential`)
 
 ### Troubleshooting
 
