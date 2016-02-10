@@ -36,6 +36,12 @@ curl https://raw.githubusercontent.com/schultyy/avm/master/install.sh | bash
 
 If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](https://www.rust-lang.org/downloads.html) and download the version for your operating system.
 
+### Required Packages
+
+- zlib development packages (`zlib1g-dev`)
+- readline support (`libreadline6` `libreadline6-dev`)
+
+### Troubleshooting
 
 If you encounter the following compilation error on a Linux based system:
 
