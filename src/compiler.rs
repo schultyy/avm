@@ -16,6 +16,7 @@ impl Compiler {
         Command::new("./configure")
             .arg(format!("--prefix={}", prefix_path))
             .current_dir(Path::new(&self.working_dir))
+            .env("RUBY_CONFIGURE_OPTS","--with-readline-dir=\"/usr/lib\"")
             .output()
             .expect("Failed to call Configure script")
     }

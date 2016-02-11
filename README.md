@@ -36,26 +36,14 @@ curl https://raw.githubusercontent.com/schultyy/avm/master/install.sh | bash
 
 If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](https://www.rust-lang.org/downloads.html) and download the version for your operating system.
 
+### Required Packages
 
-If you encounter the following compilation error on a Linux based system:
+- zlib development packages (Ubuntu: `zlib1g-dev`)
+- readline support (Ubuntu: `libreadline6` `libreadline6-dev`)
+- C Compiler (Ubuntu: `build-essential`)
+- OpenSSL (Ubuntu: `libssl-dev`, RHEL: `openssl-dev`, Mac: `openssl`)
 
-```bash
-$ cargo build
-#...
-failed to run custom build command for `openssl-sys v0.6.6`
-```
-
-make sure that you have the following package installed:
-Ubuntu:
-```bash
-$ sudo apt-get install libssl-dev
-```
-RHEL:
-```bash
-$ sudo yum install openssl-devel
-```
-
-Mac:
+OpenSSL Mac:
 ```bash
 export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2e/include
 ```
