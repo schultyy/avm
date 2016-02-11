@@ -62,6 +62,10 @@ export PATH=~/.avm/:~/.avm/node/bin:~/.avm/ruby/bin:$PATH
 
 Right now, it is possible to run avm on the major Linux distributions and Mac OS X. There is no support for Windows right now. See [#33](https://github.com/schultyy/avm/issues/33) for details.
 
+### Upgrading to avm 1.x from 0.6 or before
+
+See [https://github.com/schultyy/avm/blob/add-upgrade-notice/upgrade_notice.md](https://github.com/schultyy/avm/blob/add-upgrade-notice/upgrade_notice.md) for instructions.
+
 ## Usage
 
 ### node.js
