@@ -15,8 +15,6 @@ The other advantage is since Rust runs on many platforms, there's also the possi
 
 ## Installation
 
-### Via Cargo Install
-
 If you use Cargo 0.6.0 (ships with Rust 1.5) you can install avm via:
 
 ```bash
@@ -24,17 +22,6 @@ $ cargo install avm
 ```
 
 After installation you need to add avm to your `PATH` variable as described in [After Installation](https://github.com/schultyy/avm#After-Installation).
-
-### From Source
-It installs from source, for that you need to have git and Rust stable installed.
-
-To install avm on your system, run the following:
-
-```bash
-curl https://raw.githubusercontent.com/schultyy/avm/master/install.sh | bash
-```
-
-If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](https://www.rust-lang.org/downloads.html) and download the version for your operating system.
 
 ### Required Packages for installing Ruby
 
