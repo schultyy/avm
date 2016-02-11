@@ -36,16 +36,17 @@ curl https://raw.githubusercontent.com/schultyy/avm/master/install.sh | bash
 
 If Rust is not installed yet, visit [https://www.rust-lang.org/downloads.html](https://www.rust-lang.org/downloads.html) and download the version for your operating system.
 
-### Required Packages
+### Required Packages for installing Ruby
 
 - zlib development packages (Ubuntu: `zlib1g-dev`)
 - readline support (Ubuntu: `libreadline6` `libreadline6-dev`)
 - C Compiler (Ubuntu: `build-essential`)
 - OpenSSL (Ubuntu: `libssl-dev`, RHEL: `openssl-dev`, Mac: `openssl`)
 
-OpenSSL Mac:
+By default, avm uses `/usr/include/openssl` as a lookup path. If you want to use a custom path, for example to link against an OpenSSL version installed via homebrew, export `OPENSSL_INCLUDE_DIR`:
+
 ```bash
-export OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2e/include
+export OPENSSL_INCLUDE_DIR="$(brew --prefix openssl)"
 ```
 
 ### After installation
