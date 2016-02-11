@@ -1,5 +1,6 @@
 use std::process::{Command, Output};
 use std::path::Path;
+use std::env;
 
 pub struct Compiler {
     working_dir: String
@@ -12,9 +13,17 @@ impl Compiler {
         }
     }
 
+    fn openssl_path(&self) -> String {
+        match env::var("OPENSSL_INCLUDE_DIR") {
+            Ok(val) => val,
+            Err(_) => "/usr/include/openssl".into()
+        }
+    }
+
     pub fn call_configure_script(&self, prefix_path: &str) -> Output {
         Command::new("./configure")
             .arg(format!("--prefix={}", prefix_path))
+            .arg(format!("--with-openssl-dir={}", self.openssl_path()))
             .current_dir(Path::new(&self.working_dir))
             .env("RUBY_CONFIGURE_OPTS","--with-readline-dir=\"/usr/lib\"")
             .output()
