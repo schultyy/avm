@@ -127,7 +127,7 @@ $ avm use ruby 2.3.0
 List all installed versions:
 
 ```bash
-$ avm ruby ls
+$ avm ls ruby
 ```
 
 Uninstall a version:
