@@ -64,7 +64,7 @@ Right now, it is possible to run avm on the major Linux distributions and Mac OS
 
 ### Upgrading to avm 1.x from 0.6 or before
 
-See [https://github.com/schultyy/avm/blob/add-upgrade-notice/upgrade_notice.md](https://github.com/schultyy/avm/blob/add-upgrade-notice/upgrade_notice.md) for instructions.
+See [https://github.com/schultyy/avm/blob/master/upgrade_notice.md](https://github.com/schultyy/avm/blob/add-upgrade-notice/upgrade_notice.md) for instructions.
 
 ## Usage
 
@@ -103,7 +103,7 @@ $ avm uninstall node 4.1.2
 Select the node version based on the `package.json` in the current directory:
 
 ```bash
-$ avm autoselect
+$ avm autoselect node
 ```
 Note that this depends on the `engines` property set in the `package.json`. If `engines`
 specifies a node version < 4.x, then it checks for strict equality only. It does not support any
