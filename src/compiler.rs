@@ -16,7 +16,7 @@ impl Compiler {
     fn openssl_path(&self) -> String {
         match env::var("OPENSSL_INCLUDE_DIR") {
             Ok(val) => val,
-            Err(_) => "/usr/bin".into()
+            Err(_) => "/usr/include/openssl".into()
         }
     }
 
