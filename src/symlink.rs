@@ -9,6 +9,12 @@ pub struct Symlink {
     home: HomeDirectory
 }
 
+pub enum SymlinkError {
+    IoError(Error),
+    NodeError(Error),
+    NpmError(Error)
+}
+
 impl Symlink {
     fn create_bin_dir(&self) -> Result<(), Error> {
         use std::fs;
@@ -64,17 +70,20 @@ impl Symlink {
     }
 
 
-    pub fn create_symlinks_to_system_binaries(&self) -> Result<(), Error> {
+    pub fn create_symlinks_to_system_binaries(&self) -> Result<(), SymlinkError> {
         match self.create_bin_dir() {
             Ok(_) => { },
-            Err(err) =>  return Err(err)
+            Err(err) =>  return Err(SymlinkError::IoError(err))
         }
 
-        for binary in vec!["node", "npm"] {
-            match self.symlink_to_system_binary(binary.into()) {
-                Ok(_) => { },
-                Err(err) => return Err(err)
-            }
+        match self.symlink_to_system_binary("node".into()) {
+            Ok(_) => { },
+            Err(err) => return Err(SymlinkError::NodeError(err))
+        }
+
+        match self.symlink_to_system_binary("npm".into()) {
+            Ok(_) => { },
+            Err(err) => return Err(SymlinkError::NpmError(err))
         }
 
         Ok(())
