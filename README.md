@@ -33,7 +33,7 @@ After installation you need to add avm to your `PATH` variable as described in [
 By default, avm uses `/usr/include/openssl` as a lookup path. If you want to use a custom path, for example to link against an OpenSSL version installed via homebrew, export `OPENSSL_INCLUDE_DIR`:
 
 ```bash
-export OPENSSL_INCLUDE_DIR="$(brew --prefix openssl)"
+export OPENSSL_INCLUDE_DIR="$(brew --prefix openssl)/include"
 ```
 
 ### After installation
