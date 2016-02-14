@@ -204,8 +204,9 @@ pub mod node {
     use language;
     use autoselect;
     use home_directory::HomeDirectory;
-    use symlink::Symlink;
+    use symlink::{Symlink, SymlinkError};
     use std::io::ErrorKind;
+    use std::error::Error;
     use std::env;
 
     pub fn install(version: &str) {
@@ -289,12 +290,27 @@ pub mod node {
             remove_symlink();
             match symlink.create_symlinks_to_system_binaries() {
                 Ok(_)       => logger::stdout("using system node"),
-                Err(err)    => {
-                    if err.kind() == ErrorKind::NotFound {
-                        logger::stderr(format!("It appears that there's no node.js preinstalled on this system"));
-                        return;
-                    } else {
-                        logger::stderr(format!("{:?}", err));
+                Err(e)    => {
+                    match e {
+                        SymlinkError::IoError(err) => logger::stderr(format!("{:?}", err)),
+                        SymlinkError::NodeError(err) => {
+                            if err.kind() == ErrorKind::NotFound {
+                                logger::stderr(format!("It appears that there's no node.js preinstalled on this system"));
+                                return;
+                            } else {
+                                logger::stderr("Failed to symlink node");
+                                logger::stderr(format!("{:?}", err.description()));
+                            }
+                        },
+                        SymlinkError::NpmError(err) => {
+                            if err.kind() == ErrorKind::NotFound {
+                                logger::stderr(format!("It appears that there's no node.js preinstalled on this system"));
+                                return;
+                            } else {
+                                logger::stderr("Failed to symlink npm");
+                                logger::stderr(format!("{:?}", err.description()));
+                            }
+                        }
                     }
                 }
             }
