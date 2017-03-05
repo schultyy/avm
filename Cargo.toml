@@ -6,7 +6,7 @@ license = "MIT"
 description = "Manages node.js installations"
 repository = "https://github.com/schultyy/avm"
 [dependencies]
-hyper="0.6.10"
+hyper="0.10.5"
 regex="0.1.41"
 os_type="0.6.0"
 term = "0.2"
