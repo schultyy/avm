@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cargo run install node 4.1.2
-cargo run install node 5.0.0
-cargo run use node 4.1.2
-cargo run ls node | grep "=> 4.1.2"
+cargo run install node 6.10.2
+cargo run install node 7.7.4
+cargo run use node 6.10.2
+cargo run ls node | grep "=> 6.10.2"
 
 if [ $? -eq 0 ]
 then

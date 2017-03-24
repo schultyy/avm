@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cargo run install node 0.10.36
-cargo run use node 0.10.36
+cargo run install node 6.10.2
+cargo run use node 6.10.2
 old_npm_version=$(npm -v)
 npm install -g npm
 new_npm_version=$(npm -v)
