@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cargo run install node 0.12.0
-cargo run use node 0.12.0
-cargo run uninstall node 0.12.0
+cargo run install node 6.10.2
+cargo run use node 6.10.2
+cargo run uninstall node 6.10.2
 result=$(readlink ~/.avm/node/bin)
 if [ $? -eq 1 ]
 then
